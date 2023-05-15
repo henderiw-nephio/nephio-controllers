@@ -62,7 +62,7 @@ func (r *reconciler) Setup(mgr ctrl.Manager, cfg *ctrlconfig.ControllerConfig) (
 	r.finalizer = resource.NewAPIFinalizer(mgr.GetClient(), finalizer)
 
 	return nil, ctrl.NewControllerManagedBy(mgr).
-		Named("repositoryController").
+		Named("RepositoryController").
 		For(&infrav1alpha1.Repository{}).
 		Complete(r)
 }

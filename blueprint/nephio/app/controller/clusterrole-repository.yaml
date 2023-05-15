@@ -13,6 +13,14 @@ metadata:
   name: nephio-controller-repository-role
 rules:
 - apiGroups:
+  - '*'
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - infra.nephio.org
   resources:
   - repositories

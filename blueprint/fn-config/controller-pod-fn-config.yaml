@@ -14,6 +14,9 @@ spec:
     repository:
       scope: cluster
       permissions:
+      - apiGroups: ["*"]
+        resources: [services]
+        verbs: [get, list, watch]
       - apiGroups: [infra.nephio.org]
         resources: [repositories]
         verbs: [get, list, watch, update, patch, create, delete]
@@ -23,6 +26,9 @@ spec:
     token:
       scope: cluster
       permissions:
+      - apiGroups: ["*"]
+        resources: [services]
+        verbs: [get, list, watch]
       - apiGroups: [infra.nephio.org]
         resources: [tokens]
         verbs: [get, list, watch, update, patch, create, delete]

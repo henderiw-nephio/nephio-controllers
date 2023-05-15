@@ -13,6 +13,14 @@ metadata:
   name: nephio-controller-token-role
 rules:
 - apiGroups:
+  - '*'
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - infra.nephio.org
   resources:
   - tokens

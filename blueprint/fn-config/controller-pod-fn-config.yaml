@@ -72,7 +72,7 @@ spec:
         - containerPort: 8443
           name: https
       - name: controller
-        image: europe-docker.pkg.dev/srlinux/eu.gcr.io/bootstrap-controller:latest
+        image: europe-docker.pkg.dev/srlinux/eu.gcr.io/nephio-operator:latest
         command:
         - /manager
         args:

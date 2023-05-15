@@ -27,7 +27,7 @@ import (
 	ctrlconfig "github.com/henderiw-nephio/nephio-controllers/controllers/config"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
-	infrav1alpha1 "github.com/nephio-project/api/infra/v1alpha1"
+	infrav1alpha1 "github.com/henderiw-nephio/repository/apis/infra/v1alpha1"
 	"github.com/nokia/k8s-ipam/pkg/meta"
 	"github.com/nokia/k8s-ipam/pkg/resource"
 	"github.com/pkg/errors"

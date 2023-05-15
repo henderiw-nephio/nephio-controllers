@@ -130,8 +130,6 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
-github.com/nephio-project/api v0.0.0-20230511161732-3316d8b9a793 h1:qgA4L7BINIiy+0a8xutTFpJ9a3LuUMpGGgnckN7iTkA=
-github.com/nephio-project/api v0.0.0-20230511161732-3316d8b9a793/go.mod h1:ti2CdEDwuN+6l0pypPq0vwibZZKap0sEjJlMNLgcaHM=
 github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230512121834-a81cdef2b7d1 h1:MhCmzMPaRnKg+WcRmazTCx1zeLDtvTfwk389epTROc0=
 github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230512121834-a81cdef2b7d1/go.mod h1:8RXr0UBUGfS8yj0+ral+rieJWp89vjQjkfA3mxxd1d8=
 github.com/nokia/k8s-ipam v0.0.4-0.20230508220232-534a4724d032 h1:NrINVpde4iKcsPV88itkcaDkxwjNkogUNZUkUlr05tM=

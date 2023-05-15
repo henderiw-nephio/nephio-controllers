@@ -81,7 +81,7 @@ spec:
           value: "true"
         - name: ENABLE_BOOTSTRAP
           value: "true"
-        image: europe-docker.pkg.dev/srlinux/eu.gcr.io/bootstrap-controller:latest
+        image: europe-docker.pkg.dev/srlinux/eu.gcr.io/nephio-operator:latest
         livenessProbe:
           httpGet:
             path: /healthz

@@ -18,6 +18,7 @@ package bootstrap
 
 import (
 	"context"
+	"encoding/json"
 	"reflect"
 	"strings"
 
@@ -39,14 +40,14 @@ func (r *reconciler) isCapiClusterReady(ctx context.Context, secret *corev1.Secr
 		r.l.Error(err, "cannot get cluster")
 		return false
 	}
-	c, err := meta.MarshalData(cl)
+	b, err := json.Marshal(cl)
 	if err != nil {
 		r.l.Error(err, "cannot marshal cluster")
 		return false
 	}
-	cluster, ok := c.(capiv1beta1.Cluster)
-	if !ok {
-		r.l.Error(err, "cannot cast cluster")
+	cluster := &capiv1beta1.Cluster{}
+	if err := json.Unmarshal(b, cluster); err != nil {
+		r.l.Error(err, "cannot unmarshal cluster")
 		return false
 	}
 	return isReady(cluster.GetConditions())

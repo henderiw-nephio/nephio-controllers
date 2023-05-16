@@ -17,7 +17,7 @@ limitations under the License.
 package meta
 
 import (
-	"sigs.k8s.io/yaml"
+	//"sigs.k8s.io/yaml"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
@@ -30,6 +30,7 @@ func GetUnstructuredFromGVK(gvk *schema.GroupVersionKind) *unstructured.Unstruct
 	return uCopy
 }
 
+/*
 func MarshalData(o *unstructured.Unstructured) (any, error) {
 	b, err := yaml.Marshal(o.UnstructuredContent())
 	if err != nil {
@@ -42,3 +43,4 @@ func MarshalData(o *unstructured.Unstructured) (any, error) {
 	}
 	return rj, nil
 }
+*/

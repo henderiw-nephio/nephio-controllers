@@ -44,7 +44,7 @@ func (r *reconciler) isCapiClusterReady(ctx context.Context, secret *corev1.Secr
 		r.l.Error(err, "cannot marshal cluster")
 		return false
 	}
-	cluster, ok := c.(*capiv1beta1.Cluster)
+	cluster, ok := c.(capiv1beta1.Cluster)
 	if !ok {
 		r.l.Error(err, "cannot cast cluster")
 		return false

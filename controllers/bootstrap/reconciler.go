@@ -104,6 +104,8 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			r.l.Error(err, msg)
 			return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
 		}
+
+		// This needs to be replace -> just used for test purposes
 		pods := &corev1.PodList{}
 		if err = clusterClient.List(ctx, pods); err != nil {
 			msg := "cannot get Pod List"
@@ -115,6 +117,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		if len(pods.Items) == 0 {
 			return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
 		}
+		// This needs to be replace -> just used for test purposes
 	}
 	return ctrl.Result{}, nil
 

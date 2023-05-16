@@ -121,7 +121,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 							return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 						}
 						ns := &corev1.Namespace{}
-						if err = clusterClient.Get(ctx, types.NamespacedName{Name: secret.GetNamespace()}, ns); err != nil {
+						if err = clusterClient.Get(ctx, types.NamespacedName{Name: cr.GetNamespace()}, ns); err != nil {
 							if resource.IgnoreNotFound(err) != nil {
 								msg := fmt.Sprintf("cannot get namespace: %s", secret.GetNamespace())
 								r.l.Error(err, msg)

@@ -18,10 +18,13 @@ package bootstrap
 
 import (
 	"context"
+	"reflect"
 	"strings"
 
 	"github.com/henderiw-nephio/bootstrap-controller/pkg/applicator"
+	"github.com/henderiw-nephio/nephio-controllers/pkg/meta"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/clientcmd"
 	capiv1beta1 "sigs.k8s.io/cluster-api/api/v1beta1"
@@ -30,9 +33,20 @@ import (
 
 func (r *reconciler) isCapiClusterReady(ctx context.Context, secret *corev1.Secret) bool {
 	name := strings.ReplaceAll(secret.GetName(), "-kubeconfig", "")
-	cluster := &capiv1beta1.Cluster{}
-	if err := r.Get(ctx, types.NamespacedName{Namespace: secret.GetNamespace(), Name: name}, cluster); err != nil {
+
+	cl := meta.GetUnstructuredFromGVK(&schema.GroupVersionKind{Group: capiv1beta1.GroupVersion.Group, Version: capiv1beta1.GroupVersion.Version, Kind: reflect.TypeOf(capiv1beta1.Cluster{}).Name()})
+	if err := r.Get(ctx, types.NamespacedName{Namespace: secret.GetNamespace(), Name: name}, cl); err != nil {
 		r.l.Error(err, "cannot get cluster")
+		return false
+	}
+	c, err := meta.MarshalData(cl)
+	if err != nil {
+		r.l.Error(err, "cannot marshal cluster")
+		return false
+	}
+	cluster, ok := c.(*capiv1beta1.Cluster)
+	if !ok {
+		r.l.Error(err, "cannot cast cluster")
 		return false
 	}
 	return isReady(cluster.GetConditions())

@@ -30,7 +30,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
-	capiv1beta1 "sigs.k8s.io/cluster-api/api/v1beta1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/event"
@@ -50,9 +49,9 @@ func init() {
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *reconciler) Setup(mgr ctrl.Manager, cfg *ctrlconfig.ControllerConfig) (map[schema.GroupVersionKind]chan event.GenericEvent, error) {
-	if err := capiv1beta1.AddToScheme(mgr.GetScheme()); err != nil {
-		return nil, err
-	}
+	//if err := capiv1beta1.AddToScheme(mgr.GetScheme()); err != nil {
+	//	return nil, err
+	//}
 
 	r.Client = mgr.GetClient()
 	r.porchClient = cfg.PorchClient

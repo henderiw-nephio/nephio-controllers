@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
+	_ "github.com/henderiw-nephio/nephio-controllers/controllers/bootstrap"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/repository"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/token"
-	_ "github.com/henderiw-nephio/nephio-controllers/controllers/bootstrap"
 
 	"github.com/henderiw-nephio/nephio-controllers/controllers"
 	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/config"

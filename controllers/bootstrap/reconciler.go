@@ -71,7 +71,6 @@ type reconciler struct {
 
 func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.l = log.FromContext(ctx)
-	r.l.Info("reconcile")
 
 	secret := &corev1.Secret{}
 	if err := r.Get(ctx, req.NamespacedName, secret); err != nil {
@@ -90,6 +89,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	}
 
 	if secret.GetNamespace() == "config-management-system" {
+		r.l.Info("reconcile")
 		clusterName, ok := secret.GetAnnotations()["nephio.org/site"]
 		if !ok {
 			return reconcile.Result{}, nil
@@ -139,6 +139,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	} else {
 		clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(secret)
 		if ok {
+			r.l.Info("reconcile")
 			clusterClient, ready, err := clusterClient.GetClusterClient(ctx)
 			if err != nil {
 				msg := "cannot get clusterClient"

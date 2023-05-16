@@ -90,6 +90,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		return reconcile.Result{}, nil
 	}
 
+	// this branch handles installing the secrets to the remote cluster
 	if cr.GetNamespace() == "config-management-system" {
 		r.l.Info("reconcile")
 		clusterName, ok := cr.GetAnnotations()["nephio.org/site"]
@@ -144,6 +145,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			}
 		}
 	} else {
+		// this branch handles manifest installation
 		clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(cr)
 		if ok {
 			r.l.Info("reconcile")

@@ -127,7 +127,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 								r.l.Error(err, msg)
 								return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
 							}
-							msg := fmt.Sprintf("namespace: %s, does not exist, retry...", secret.GetNamespace())
+							msg := fmt.Sprintf("namespace: %s, does not exist, retry...", cr.GetNamespace())
 							r.l.Info(msg)
 							return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 						}

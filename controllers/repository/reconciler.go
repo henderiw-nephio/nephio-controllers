@@ -89,16 +89,21 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		return ctrl.Result{}, nil
 	}
 
+	// check if client exists otherwise retry
 	giteaClient := r.giteaClient.Get()
 	if giteaClient == nil {
 		err := fmt.Errorf("gitea server unreachable")
-		r.l.Error(err, "cannot connect to gitea server")
+		r.l.Error(err, "cannot connect to git server")
 		cr.SetConditions(infrav1alpha1.Failed(err.Error()))
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, errors.Wrap(r.Status().Update(ctx, cr), errUpdateStatus)
 	}
 
 	if meta.WasDeleted(cr) {
+		// repo being deleted
+		// Delete the repo from the git server
+		// when successfull remove the finalizer
 		if err := r.deleteRepo(ctx, giteaClient, cr); err != nil {
+			r.l.Error(err, "cannot delete repo in git server")
 			return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, errors.Wrap(r.Status().Update(ctx, cr), errUpdateStatus)
 		}
 
@@ -112,16 +117,14 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		return ctrl.Result{Requeue: false}, nil
 	}
 
+	// add finalizer to avoid deleting the repo w/o it being deleted from the git server
 	if err := r.finalizer.AddFinalizer(ctx, cr); err != nil {
-		// If this is the first time we encounter this issue we'll be requeued
-		// implicitly when we update our status with the new error condition. If
-		// not, we requeue explicitly, which will trigger backoff.
 		r.l.Error(err, "cannot add finalizer")
 		cr.SetConditions(infrav1alpha1.Failed(err.Error()))
 		return ctrl.Result{Requeue: true, RequeueAfter: 5 * time.Second}, errors.Wrap(r.Status().Update(ctx, cr), errUpdateStatus)
 	}
 
-	// create repo
+	// create repo in git server
 	if err := r.createRepo(ctx, giteaClient, cr); err != nil {
 		return ctrl.Result{RequeueAfter: 5 * time.Second}, errors.Wrap(r.Status().Update(ctx, cr), errUpdateStatus)
 	}

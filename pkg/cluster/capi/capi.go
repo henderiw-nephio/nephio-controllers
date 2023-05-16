@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package bootstrap
+package capi
 
 import (
 	"context"
@@ -22,7 +22,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/henderiw-nephio/bootstrap-controller/pkg/applicator"
+	"github.com/go-logr/logr"
+	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/meta"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -30,13 +31,29 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	capiv1beta1 "sigs.k8s.io/cluster-api/api/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-func (r *reconciler) isCapiClusterReady(ctx context.Context, secret *corev1.Secret) bool {
-	name := strings.ReplaceAll(secret.GetName(), "-kubeconfig", "")
+type Capi struct {
+	client.Client
+	Secret *corev1.Secret
+	l      logr.Logger
+}
+
+func (r *Capi) GetClusterClient(ctx context.Context) (applicator.APIPatchingApplicator, bool, error) {
+	if !r.isCapiClusterReady(ctx) {
+		return applicator.APIPatchingApplicator{}, false, nil
+	}
+	return getCapiClusterClient(r.Secret)
+
+}
+
+func (r *Capi) isCapiClusterReady(ctx context.Context) bool {
+	r.l = log.FromContext(ctx)
+	name := strings.ReplaceAll(r.Secret.GetName(), "-kubeconfig", "")
 
 	cl := meta.GetUnstructuredFromGVK(&schema.GroupVersionKind{Group: capiv1beta1.GroupVersion.Group, Version: capiv1beta1.GroupVersion.Version, Kind: reflect.TypeOf(capiv1beta1.Cluster{}).Name()})
-	if err := r.Get(ctx, types.NamespacedName{Namespace: secret.GetNamespace(), Name: name}, cl); err != nil {
+	if err := r.Get(ctx, types.NamespacedName{Namespace: r.Secret.GetNamespace(), Name: name}, cl); err != nil {
 		r.l.Error(err, "cannot get cluster")
 		return false
 	}
@@ -53,20 +70,6 @@ func (r *reconciler) isCapiClusterReady(ctx context.Context, secret *corev1.Secr
 	return isReady(cluster.GetConditions())
 }
 
-func getCapiClusterClient(secret *corev1.Secret) (applicator.APIPatchingApplicator, error) {
-	//provide a restconfig from the secret value
-	config, err := clientcmd.RESTConfigFromKubeConfig(secret.Data["value"])
-	if err != nil {
-		return applicator.APIPatchingApplicator{}, err
-	}
-	// build a cluster client from the kube rest config
-	clClient, err := client.New(config, client.Options{})
-	if err != nil {
-		return applicator.APIPatchingApplicator{}, err
-	}
-	return applicator.NewAPIPatchingApplicator(clClient), nil
-}
-
 func isReady(cs capiv1beta1.Conditions) bool {
 	for _, c := range cs {
 		if c.Type == capiv1beta1.ReadyCondition {
@@ -78,13 +81,16 @@ func isReady(cs capiv1beta1.Conditions) bool {
 	return false
 }
 
-/*
-func getReadyStatus(cs capiv1beta1.Conditions) capiv1beta1.Condition {
-	for _, c := range cs {
-		if c.Type == capiv1beta1.ReadyCondition {
-			return c
-		}
+func getCapiClusterClient(secret *corev1.Secret) (applicator.APIPatchingApplicator, bool, error) {
+	//provide a restconfig from the secret value
+	config, err := clientcmd.RESTConfigFromKubeConfig(secret.Data["value"])
+	if err != nil {
+		return applicator.APIPatchingApplicator{}, false, err
 	}
-	return capiv1beta1.Condition{}
+	// build a cluster client from the kube rest config
+	clClient, err := client.New(config, client.Options{})
+	if err != nil {
+		return applicator.APIPatchingApplicator{}, false, err
+	}
+	return applicator.NewAPIPatchingApplicator(clClient), true, nil
 }
-*/

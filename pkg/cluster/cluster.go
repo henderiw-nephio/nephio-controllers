@@ -14,27 +14,32 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package bootstrap
+package cluster
 
 import (
+	"context"
 	"strings"
 
+	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
+	"github.com/henderiw-nephio/nephio-controllers/pkg/cluster/capi"
 	corev1 "k8s.io/api/core/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type ClusterType string
+type Cluster struct {
+	client.Client
+}
 
-const (
-	ClusterTypeCapi         ClusterType = "capi"
-	ClusterTypeNoKubeConfig ClusterType = "none"
-)
-
-func getClusterType(secret *corev1.Secret) ClusterType {
+func (r Cluster) GetClusterClient(secret *corev1.Secret) (ClusterClient, bool) {
 	switch string(secret.Type) {
 	case "cluster.x-k8s.io/secret":
 		if strings.Contains(secret.GetName(), "kubeconfig") {
-			return ClusterTypeCapi
+			return &capi.Capi{Client: r.Client, Secret: secret}, true
 		}
 	}
-	return ClusterTypeNoKubeConfig
+	return nil, false
+}
+
+type ClusterClient interface {
+	GetClusterClient(context.Context) (applicator.APIPatchingApplicator, bool, error)
 }

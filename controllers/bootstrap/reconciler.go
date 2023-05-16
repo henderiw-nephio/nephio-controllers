@@ -18,13 +18,13 @@ package bootstrap
 
 import (
 	"context"
-	"fmt"
+	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
-	"github.com/henderiw-nephio/bootstrap-controller/pkg/applicator"
 	"github.com/henderiw-nephio/nephio-controllers/controllers"
 	ctrlconfig "github.com/henderiw-nephio/nephio-controllers/controllers/config"
+	"github.com/henderiw-nephio/nephio-controllers/pkg/cluster"
 	"github.com/nephio-project/nephio/controllers/pkg/resource"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
@@ -76,48 +76,87 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	if err := r.Get(ctx, req.NamespacedName, secret); err != nil {
 		// if the resource no longer exists the reconcile loop is done
 		if resource.IgnoreNotFound(err) != nil {
-			r.l.Error(err, "cannot get resource")
-			return ctrl.Result{}, errors.Wrap(resource.IgnoreNotFound(err), "cannot get resource")
+			msg := "cannot get resource"
+			r.l.Error(err, msg)
+			return ctrl.Result{}, errors.Wrap(resource.IgnoreNotFound(err), msg)
 		}
 		return reconcile.Result{}, nil
 	}
 
+	// if the secret is being deleted dont do anything for now
 	if secret.DeletionTimestamp != nil {
 		return reconcile.Result{}, nil
 	}
 
-	clusterType := getClusterType(secret)
-	if clusterType != ClusterTypeNoKubeConfig {
-		var err error
-		var clusterClient applicator.APIPatchingApplicator
-		switch clusterType {
-		case ClusterTypeCapi:
-			if !r.isCapiClusterReady(ctx, secret) {
+	if secret.GetNamespace() == "config-management-system" {
+		clusterName, ok := secret.GetAnnotations()["nephio.org/site"]
+		if !ok {
+			return reconcile.Result{}, nil
+		}
+		secrets := &corev1.SecretList{}
+		if err := r.List(ctx, secrets); err != nil {
+			msg := "cannot lis secrets"
+			r.l.Error(err, msg)
+			return ctrl.Result{RequeueAfter: 5 * time.Second}, errors.Wrap(err, msg)
+		}
+		found := false
+		for _, secret := range secrets.Items {
+			if strings.Contains(secret.GetName(), clusterName) {
+				clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(&secret)
+				if ok {
+					found = true
+					clusterClient, ready, err := clusterClient.GetClusterClient(ctx)
+					if err != nil {
+						msg := "cannot get clusterClient"
+						r.l.Error(err, msg)
+						return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+					}
+					if !ready {
+						r.l.Info("cluster not ready")
+						return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+					}
+					namspaces := &corev1.NamespaceList{}
+					if err = clusterClient.List(ctx, namspaces); err != nil {
+						msg := "cannot get namspaces List"
+						r.l.Error(err, msg)
+						return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+					}
+
+					r.l.Info("namspaces", "cluster", req.NamespacedName, "items", len(namspaces.Items))
+					if len(namspaces.Items) == 0 {
+						return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
+					}
+				}
+			}
+		}
+		if !found {
+			return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+		}
+	} else {
+		clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(secret)
+		if ok {
+			clusterClient, ready, err := clusterClient.GetClusterClient(ctx)
+			if err != nil {
+				msg := "cannot get clusterClient"
+				r.l.Error(err, msg)
+				return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+			}
+			if !ready {
 				r.l.Info("cluster not ready")
 				return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 			}
-			// err is handled generically for all cluster types
-			clusterClient, err = getCapiClusterClient(secret)
-		}
-		if err != nil {
-			msg := fmt.Sprintf("cannot get client clusterType: %s", clusterType)
-			r.l.Error(err, msg)
-			return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
-		}
+			pods := &corev1.PodList{}
+			if err = clusterClient.List(ctx, pods); err != nil {
+				msg := "cannot get Pod List"
+				r.l.Error(err, msg)
+				return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+			}
 
-		// This needs to be replace -> just used for test purposes
-		pods := &corev1.PodList{}
-		if err = clusterClient.List(ctx, pods); err != nil {
-			msg := "cannot get Pod List"
-			r.l.Error(err, msg)
-			return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+			r.l.Info("pod", "cluster", req.NamespacedName, "items", len(pods.Items))
+			if len(pods.Items) == 0 {
+				return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
+			}
 		}
-
-		r.l.Info("pod", "cluster", req.NamespacedName, "items", len(pods.Items))
-		if len(pods.Items) == 0 {
-			return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
-		}
-		// This needs to be replace -> just used for test purposes
 	}
 	return ctrl.Result{}, nil
 

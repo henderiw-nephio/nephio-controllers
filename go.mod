@@ -10,7 +10,6 @@ replace k8s.io/client-go => k8s.io/client-go v0.26.1
 
 require (
 	code.gitea.io/sdk/gitea v0.15.1
-	github.com/henderiw-nephio/bootstrap-controller v0.0.0-20230515070736-86555ad3f07c
 	github.com/henderiw-nephio/repository v0.0.0-20230515035933-d90a480b925c
 	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230512121834-a81cdef2b7d1
 	github.com/nokia/k8s-ipam v0.0.4-0.20230508220232-534a4724d032

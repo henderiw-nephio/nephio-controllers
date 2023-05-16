@@ -98,8 +98,6 @@ github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/hashicorp/go-version v1.2.1 h1:zEfKbn2+PDgroKdiOzqiE8rsmLqU2uwi5PB5pBJ3TkI=
 github.com/hashicorp/go-version v1.2.1/go.mod h1:fltr4n8CU8Ke44wwGCBoEymUuxUHl09ZGVZPK5anwXA=
-github.com/henderiw-nephio/bootstrap-controller v0.0.0-20230515070736-86555ad3f07c h1:/0wkbPv/95W48dF3l0aBG5WcdtnU0Va2ss7UpL86lfU=
-github.com/henderiw-nephio/bootstrap-controller v0.0.0-20230515070736-86555ad3f07c/go.mod h1:d6ck5uGbe5n8ic2PL5KkMSi9+K/uIciK8+oqssia7UQ=
 github.com/henderiw-nephio/repository v0.0.0-20230515035933-d90a480b925c h1:rFqfS5reXufNTS5Lcty8Ad5XKltAatiZneg6mwmodUg=
 github.com/henderiw-nephio/repository v0.0.0-20230515035933-d90a480b925c/go.mod h1:e6Ng/dSW1Dy/Sb8rTUOO5LIMtmoRstM1G8UpJ9bRw/U=
 github.com/imdario/mergo v0.3.15 h1:M8XP7IuFNsqUx6VPK2P9OSmsYsI/YFaGil0uD21V3dM=

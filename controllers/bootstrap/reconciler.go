@@ -18,6 +18,7 @@ package bootstrap
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -29,6 +30,7 @@ import (
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -72,8 +74,8 @@ type reconciler struct {
 func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.l = log.FromContext(ctx)
 
-	secret := &corev1.Secret{}
-	if err := r.Get(ctx, req.NamespacedName, secret); err != nil {
+	cr := &corev1.Secret{}
+	if err := r.Get(ctx, req.NamespacedName, cr); err != nil {
 		// if the resource no longer exists the reconcile loop is done
 		if resource.IgnoreNotFound(err) != nil {
 			msg := "cannot get resource"
@@ -84,13 +86,13 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	}
 
 	// if the secret is being deleted dont do anything for now
-	if secret.DeletionTimestamp != nil {
+	if cr.DeletionTimestamp != nil {
 		return reconcile.Result{}, nil
 	}
 
-	if secret.GetNamespace() == "config-management-system" {
+	if cr.GetNamespace() == "config-management-system" {
 		r.l.Info("reconcile")
-		clusterName, ok := secret.GetAnnotations()["nephio.org/site"]
+		clusterName, ok := cr.GetAnnotations()["nephio.org/site"]
 		if !ok {
 			return reconcile.Result{}, nil
 		}
@@ -117,16 +119,22 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 							r.l.Info("cluster not ready")
 							return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 						}
-						namspaces := &corev1.NamespaceList{}
-						if err = clusterClient.List(ctx, namspaces); err != nil {
-							msg := "cannot get namspaces List"
-							r.l.Error(err, msg)
-							return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+						ns := &corev1.Namespace{}
+						if err = clusterClient.Get(ctx, types.NamespacedName{Name: secret.GetNamespace()}, ns); err != nil {
+							if resource.IgnoreNotFound(err) != nil {
+								msg := fmt.Sprintf("cannot get namespace: %s", secret.GetNamespace())
+								r.l.Error(err, msg)
+								return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+							}
+							msg := fmt.Sprintf("namespace: %s, does not exist, retry...", secret.GetNamespace())
+							r.l.Info(msg)
+							return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 						}
 
-						r.l.Info("namspaces", "cluster", req.NamespacedName, "items", len(namspaces.Items))
-						if len(namspaces.Items) == 0 {
-							return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
+						if err := clusterClient.Apply(ctx, cr); err != nil {
+							msg := fmt.Sprintf("cannot apply secret to cluster %s", clusterName)
+							r.l.Error(err, msg)
+							return ctrl.Result{RequeueAfter: 10 * time.Second}, errors.Wrap(err, msg)
 						}
 					}
 				}
@@ -135,9 +143,8 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 				return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 			}
 		}
-
 	} else {
-		clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(secret)
+		clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(cr)
 		if ok {
 			r.l.Info("reconcile")
 			clusterClient, ready, err := clusterClient.GetClusterClient(ctx)
@@ -164,5 +171,4 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		}
 	}
 	return ctrl.Result{}, nil
-
 }

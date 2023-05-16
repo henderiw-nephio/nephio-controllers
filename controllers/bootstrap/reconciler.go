@@ -71,6 +71,7 @@ type reconciler struct {
 
 func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.l = log.FromContext(ctx)
+	r.l.Info("reconcile")
 
 	secret := &corev1.Secret{}
 	if err := r.Get(ctx, req.NamespacedName, secret); err != nil {
@@ -93,45 +94,48 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		if !ok {
 			return reconcile.Result{}, nil
 		}
-		secrets := &corev1.SecretList{}
-		if err := r.List(ctx, secrets); err != nil {
-			msg := "cannot lis secrets"
-			r.l.Error(err, msg)
-			return ctrl.Result{RequeueAfter: 5 * time.Second}, errors.Wrap(err, msg)
-		}
-		found := false
-		for _, secret := range secrets.Items {
-			if strings.Contains(secret.GetName(), clusterName) {
-				clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(&secret)
-				if ok {
-					found = true
-					clusterClient, ready, err := clusterClient.GetClusterClient(ctx)
-					if err != nil {
-						msg := "cannot get clusterClient"
-						r.l.Error(err, msg)
-						return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
-					}
-					if !ready {
-						r.l.Info("cluster not ready")
-						return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
-					}
-					namspaces := &corev1.NamespaceList{}
-					if err = clusterClient.List(ctx, namspaces); err != nil {
-						msg := "cannot get namspaces List"
-						r.l.Error(err, msg)
-						return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
-					}
+		if clusterName != "mgmt" {
+			secrets := &corev1.SecretList{}
+			if err := r.List(ctx, secrets); err != nil {
+				msg := "cannot lis secrets"
+				r.l.Error(err, msg)
+				return ctrl.Result{RequeueAfter: 5 * time.Second}, errors.Wrap(err, msg)
+			}
+			found := false
+			for _, secret := range secrets.Items {
+				if strings.Contains(secret.GetName(), clusterName) {
+					clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(&secret)
+					if ok {
+						found = true
+						clusterClient, ready, err := clusterClient.GetClusterClient(ctx)
+						if err != nil {
+							msg := "cannot get clusterClient"
+							r.l.Error(err, msg)
+							return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+						}
+						if !ready {
+							r.l.Info("cluster not ready")
+							return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+						}
+						namspaces := &corev1.NamespaceList{}
+						if err = clusterClient.List(ctx, namspaces); err != nil {
+							msg := "cannot get namspaces List"
+							r.l.Error(err, msg)
+							return ctrl.Result{RequeueAfter: 30 * time.Second}, errors.Wrap(err, msg)
+						}
 
-					r.l.Info("namspaces", "cluster", req.NamespacedName, "items", len(namspaces.Items))
-					if len(namspaces.Items) == 0 {
-						return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
+						r.l.Info("namspaces", "cluster", req.NamespacedName, "items", len(namspaces.Items))
+						if len(namspaces.Items) == 0 {
+							return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
+						}
 					}
 				}
 			}
+			if !found {
+				return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
+			}
 		}
-		if !found {
-			return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
-		}
+
 	} else {
 		clusterClient, ok := cluster.Cluster{Client: r.Client}.GetClusterClient(secret)
 		if ok {

@@ -16,9 +16,9 @@ import (
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/token"
 
-	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/config"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
+	ctrlrconfig "github.com/nephio-project/nephio/controllers/pkg/reconcilers/config"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -92,7 +92,10 @@ func main() {
 	for name, reconciler := range reconcilerinterface.Reconcilers {
 		setupLog.Info("reconciler", "name", name, "enabled", IsReconcilerEnabled(name))
 		if IsReconcilerEnabled(name) {
-			reconciler.SetupWithManager(mgr, ctrlCfg)
+			if _, err := reconciler.SetupWithManager(mgr, ctrlCfg); err != nil {
+				setupLog.Error(err, "unable to set up health check")
+				os.Exit(1)
+			}
 		}
 	}
 	//+kubebuilder:scaffold:builder

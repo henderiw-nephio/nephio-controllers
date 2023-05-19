@@ -6,11 +6,16 @@ import (
 	"os"
 	"strings"
 
-	_ "github.com/henderiw-nephio/nephio-controllers/controllers/bootstrap"
-	_ "github.com/henderiw-nephio/nephio-controllers/controllers/repository"
-	_ "github.com/henderiw-nephio/nephio-controllers/controllers/token"
+	/*
+		_ "github.com/henderiw-nephio/nephio-controllers/controllers/bootstrap"
+		_ "github.com/henderiw-nephio/nephio-controllers/controllers/repository"
+		_ "github.com/henderiw-nephio/nephio-controllers/controllers/token"
+	*/
+	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/bootstrap"
+	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
+	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
+	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/token"
 
-	"github.com/henderiw-nephio/nephio-controllers/controllers"
 	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/config"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
@@ -84,10 +89,10 @@ func main() {
 		//PorchClient: porchClient,
 	}
 
-	for name, reconciler := range controllers.Reconcilers {
+	for name, reconciler := range reconcilerinterface.Reconcilers {
 		setupLog.Info("reconciler", "name", name, "enabled", IsReconcilerEnabled(name))
 		if IsReconcilerEnabled(name) {
-			reconciler.Setup(mgr, ctrlCfg)
+			reconciler.SetupWithManager(mgr, ctrlCfg)
 		}
 	}
 	//+kubebuilder:scaffold:builder

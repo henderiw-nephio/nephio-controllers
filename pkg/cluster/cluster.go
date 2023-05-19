@@ -42,4 +42,5 @@ func (r Cluster) GetClusterClient(secret *corev1.Secret) (ClusterClient, bool) {
 
 type ClusterClient interface {
 	GetClusterClient(context.Context) (applicator.APIPatchingApplicator, bool, error)
+	GetClusterName() string
 }

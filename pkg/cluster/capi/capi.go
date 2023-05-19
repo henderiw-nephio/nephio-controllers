@@ -34,10 +34,21 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
+const (
+	kubeConfigSuffix = "-kubeconfig"
+)
+
 type Capi struct {
 	client.Client
 	Secret *corev1.Secret
 	l      logr.Logger
+}
+
+func (r *Capi) GetClusterName() string {
+	if r.Secret == nil {
+		return ""
+	}
+	return strings.TrimSuffix(r.Secret.GetName(),kubeConfigSuffix)
 }
 
 func (r *Capi) GetClusterClient(ctx context.Context) (applicator.APIPatchingApplicator, bool, error) {
@@ -45,12 +56,11 @@ func (r *Capi) GetClusterClient(ctx context.Context) (applicator.APIPatchingAppl
 		return applicator.APIPatchingApplicator{}, false, nil
 	}
 	return getCapiClusterClient(r.Secret)
-
 }
 
 func (r *Capi) isCapiClusterReady(ctx context.Context) bool {
 	r.l = log.FromContext(ctx)
-	name := strings.ReplaceAll(r.Secret.GetName(), "-kubeconfig", "")
+	name := r.GetClusterName()
 
 	cl := meta.GetUnstructuredFromGVK(&schema.GroupVersionKind{Group: capiv1beta1.GroupVersion.Group, Version: capiv1beta1.GroupVersion.Version, Kind: reflect.TypeOf(capiv1beta1.Cluster{}).Name()})
 	if err := r.Get(ctx, types.NamespacedName{Namespace: r.Secret.GetNamespace(), Name: name}, cl); err != nil {

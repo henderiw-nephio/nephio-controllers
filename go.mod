@@ -10,18 +10,24 @@ replace k8s.io/client-go => k8s.io/client-go v0.26.1
 
 require (
 	code.gitea.io/sdk/gitea v0.15.1
+	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230504200302-14c7b353e6b6
 	github.com/henderiw-nephio/repository v0.0.0-20230515035933-d90a480b925c
-	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230512121834-a81cdef2b7d1
+	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230519005301-c26ff87a0550
 	github.com/nokia/k8s-ipam v0.0.4-0.20230508220232-534a4724d032
 	go.uber.org/zap v1.24.0
 	sigs.k8s.io/cluster-api v1.4.2
 	sigs.k8s.io/controller-runtime v0.14.6
+	sigs.k8s.io/kustomize/kyaml v0.13.9
 )
 
 require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
+	github.com/go-errors/errors v1.4.2 // indirect
 	github.com/go-logr/zapr v1.2.3 // indirect
-	github.com/hashicorp/go-version v1.2.1 // indirect
+	github.com/hashicorp/go-version v1.5.0 // indirect
+	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
+	github.com/nephio-project/api v0.0.0-20230517035137-712cea05edd0 // indirect
+	github.com/xlab/treeprint v1.1.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
@@ -70,7 +76,7 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/api v0.27.1
 	k8s.io/apiextensions-apiserver v0.27.1 // indirect

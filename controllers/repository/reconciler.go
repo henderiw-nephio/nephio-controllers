@@ -16,6 +16,7 @@ limitations under the License.
 
 package repository
 
+/*
 import (
 	"context"
 	"fmt"
@@ -207,3 +208,4 @@ func (r *reconciler) deleteRepo(ctx context.Context, giteaClient *gitea.Client, 
 	r.l.Info("repo deleted", "name", cr.GetName())
 	return nil
 }
+*/

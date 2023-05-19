@@ -48,7 +48,7 @@ func (r *Capi) GetClusterName() string {
 	if r.Secret == nil {
 		return ""
 	}
-	return strings.TrimSuffix(r.Secret.GetName(),kubeConfigSuffix)
+	return strings.TrimSuffix(r.Secret.GetName(), kubeConfigSuffix)
 }
 
 func (r *Capi) GetClusterClient(ctx context.Context) (applicator.APIPatchingApplicator, bool, error) {

@@ -16,6 +16,7 @@ limitations under the License.
 
 package repository
 
+/*
 import (
 	"context"
 	"fmt"
@@ -228,3 +229,4 @@ func (r *reconciler) deleteToken(ctx context.Context, giteaClient *gitea.Client,
 	r.l.Info("token deleted", "name", cr.GetTokenName())
 	return nil
 }
+*/

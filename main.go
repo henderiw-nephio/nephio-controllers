@@ -6,15 +6,11 @@ import (
 	"os"
 	"strings"
 
-	/*
-		_ "github.com/henderiw-nephio/nephio-controllers/controllers/bootstrap"
-		_ "github.com/henderiw-nephio/nephio-controllers/controllers/repository"
-		_ "github.com/henderiw-nephio/nephio-controllers/controllers/token"
-	*/
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/bootstrap"
 	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/token"
+	"github.com/nephio-project/nephio-controller-poc/pkg/porch"
 
 	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
@@ -76,17 +72,15 @@ func main() {
 	gc := giteaclient.New(applicator.NewAPIPatchingApplicator(mgr.GetClient()))
 	go gc.Start(ctx)
 
-	/*
-		porchClient, err := porch.CreateClient()
-		if err != nil {
-			setupLog.Error(err, "unable to create porch client")
-			os.Exit(1)
-		}
-	*/
+	porchClient, err := porch.CreateClient()
+	if err != nil {
+		setupLog.Error(err, "unable to create porch client")
+		os.Exit(1)
+	}
 
 	ctrlCfg := &ctrlrconfig.ControllerConfig{
 		GiteaClient: gc,
-		//PorchClient: porchClient,
+		PorchClient: porchClient,
 	}
 
 	for name, reconciler := range reconcilerinterface.Reconcilers {

@@ -137,6 +137,8 @@ github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
 github.com/nephio-project/api v0.0.0-20230517035137-712cea05edd0 h1:La6pHVwbKUz2Ujv7s6VWyTDhEJY/XM54BKAM1nAnh2w=
 github.com/nephio-project/api v0.0.0-20230517035137-712cea05edd0/go.mod h1:v2DHagSVdoKQxQXFBwGw0VWvvmw5EFNJ0JuFjhwsGwM=
+github.com/nephio-project/nephio-controller-poc v0.0.2 h1:0iSooKeWzqmcTiLLfAzA4oWTWNzvOc7qcfVN+ctYexI=
+github.com/nephio-project/nephio-controller-poc v0.0.2/go.mod h1:oE13Jb5gopskPCv0YERhXwqxWIbp6uVsma/uxuP/jKc=
 github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230519005301-c26ff87a0550 h1:H/PcVCsGUBl4Ww7oL0/pf8/ffrhJd3lIPI7b48lbFUk=
 github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230519005301-c26ff87a0550/go.mod h1:udGM92qegf79KILJe8iLm19hkemfJcaTNlhtIQpmRK0=
 github.com/onsi/ginkgo v1.16.5 h1:8xi0RTUf59SOSfEtZMvwTvXYMzG4gV23XVHOZiXNtnE=

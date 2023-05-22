@@ -128,7 +128,9 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		if len(resources) > 0 {
 			clusterName, ok := resources[0].GetAnnotations()[clusterNameKey]
 			if !ok {
-				r.l.Error(fmt.Errorf("clustername expected"), "annotations", resources[0].GetAnnotations())
+				r.l.Info("clusterName not found",
+					"resource", fmt.Sprintf("%s.%s.%s", resources[0].GetAPIVersion(), resources[0].GetKind(), resources[0].GetName()),
+					"annotations", resources[0].GetAnnotations())
 				return ctrl.Result{}, nil
 			}
 			// we need to find the cluster client
@@ -171,7 +173,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 						// install resources
 						for _, resource := range resources {
 							resource := resource // required to prevent gosec warning: G601 (CWE-118): Implicit memory aliasing in for loop
-							r.l.Info("install manifest", "resources",
+							r.l.Info("install manifest", "resource",
 								fmt.Sprintf("%s.%s.%s", resource.GetAPIVersion(), resource.GetKind(), resource.GetName()))
 							if err := clusterClient.Apply(ctx, &resource); err != nil {
 								msg := fmt.Sprintf("cannot apply resource to cluster: resourceName: %s", resource.GetName())

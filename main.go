@@ -8,8 +8,8 @@ import (
 
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-packages"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
+	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
-	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/token"
 
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
 	"github.com/nephio-project/nephio-controller-poc/pkg/porch"

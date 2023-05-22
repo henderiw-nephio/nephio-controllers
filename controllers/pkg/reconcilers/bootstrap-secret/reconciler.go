@@ -139,10 +139,12 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 					newcr.Namespace = configsyncNamespace
 					// since the original annotations are set by configsync we need to reset them
 					// so apply 2 annotaations to the secret: app = bootstrap +  cluster-name = clusterName
-					newcr.Annotations = map[string]string{
+					newcr.SetAnnotations(map[string]string{
 						nephioAppKey:   bootstrapApp,
 						clusterNameKey: clusterName,
-					}
+					})
+					newcr.ResourceVersion = ""
+					newcr.UID = ""
 					r.l.Info("secret info", "secret", newcr.Annotations)
 					if err := clusterClient.Apply(ctx, newcr); err != nil {
 						msg := fmt.Sprintf("cannot apply secret to cluster %s", clusterName)

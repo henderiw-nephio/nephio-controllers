@@ -122,6 +122,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 						r.l.Info("cluster not ready")
 						return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 					}
+					// check if namespace exists, if not retry
 					ns := &corev1.Namespace{}
 					if err = clusterClient.Get(ctx, types.NamespacedName{Name: configsyncNamespace}, ns); err != nil {
 						if resource.IgnoreNotFound(err) != nil {
@@ -142,7 +143,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 						nephioAppKey:   bootstrapApp,
 						clusterNameKey: clusterName,
 					}
-					r.l.Info("secret info", "secret", newcr)
+					r.l.Info("secret info", "secret", newcr.Annotations)
 					if err := clusterClient.Apply(ctx, newcr); err != nil {
 						msg := fmt.Sprintf("cannot apply secret to cluster %s", clusterName)
 						r.l.Error(err, msg)

@@ -144,6 +144,8 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			}
 		}
 		if !found {
+			// the clusterclient was not found, we retry
+			r.l.Info("cluster client not found, retry...")
 			return ctrl.Result{RequeueAfter: 10 * time.Second}, nil
 		}
 	}

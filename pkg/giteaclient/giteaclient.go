@@ -24,7 +24,7 @@ import (
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/go-logr/logr"
-	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
+	"github.com/nephio-project/nephio/controllers/pkg/resource"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -36,14 +36,14 @@ type GiteaClient interface {
 	Get() *gitea.Client
 }
 
-func New(client applicator.APIPatchingApplicator) GiteaClient {
+func New(client resource.APIPatchingApplicator) GiteaClient {
 	return &gc{
 		client: client,
 	}
 }
 
 type gc struct {
-	client applicator.APIPatchingApplicator
+	client resource.APIPatchingApplicator
 
 	giteaClient *gitea.Client
 	l           logr.Logger
@@ -56,37 +56,35 @@ func (r *gc) Start(ctx context.Context) {
 	LOOP:
 		time.Sleep(5 * time.Second)
 
+		gitURL, ok := os.LookupEnv("GIT_URL")
+		if !ok {
+			r.l.Error(fmt.Errorf("git url not defined"), "cannot get secret")
+			goto LOOP
+		}
+
+		namespace := os.Getenv("POD_NAMESPACE")
+		if gitNamesapce, ok := os.LookupEnv("GIT_NAMESPACE"); ok {
+			namespace = gitNamesapce
+		}
+		secretName := "git-user-secret"
+		if gitSecretName, ok := os.LookupEnv("GIT_SECRET_NAME"); ok {
+			namespace = gitSecretName
+		}
+
 		// get secret that was created when installing gitea
 		secret := &corev1.Secret{}
 		if err := r.client.Get(ctx, types.NamespacedName{
-			Namespace: os.Getenv("GIT_NAMESPACE"),
-			Name:      os.Getenv("GIT_SECRET_NAME"),
+			Namespace: namespace,
+			Name:      secretName,
 		},
 			secret); err != nil {
 			r.l.Error(err, "cannot get secret")
 			goto LOOP
 		}
 
-		service := &corev1.Service{}
-		if err := r.client.Get(ctx, types.NamespacedName{
-			Namespace: os.Getenv("GIT_NAMESPACE"),
-			Name:      os.Getenv("GIT_SERVICE_NAME"),
-		},
-			service); err != nil {
-			r.l.Error(err, "cannot get service")
-			goto LOOP
-		}
-
-		port := "3000"
-		if len(service.Spec.Ports) > 0 {
-			port = service.Spec.Ports[0].TargetPort.String()
-		}
-
-		r.l.Info("target", "address", fmt.Sprintf("http://%s.%s.svc.cluster.local:%s", os.Getenv("GIT_SERVICE_NAME"), os.Getenv("GIT_NAMESPACE"), port))
-
 		// To create/list tokens we can only use basic authentication using username and password
 		giteaClient, err := gitea.NewClient(
-			fmt.Sprintf("http://%s.%s.svc.cluster.local:%s", os.Getenv("GIT_SERVICE_NAME"), os.Getenv("GIT_NAMESPACE"), port),
+			gitURL,
 			getClientAuth(secret))
 		if err != nil {
 			r.l.Error(err, "cannot authenticate to gitea")

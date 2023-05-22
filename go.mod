@@ -14,7 +14,6 @@ require (
 	github.com/nephio-project/nephio-controller-poc v0.0.2
 	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230519005301-c26ff87a0550
 	go.uber.org/zap v1.24.0
-	sigs.k8s.io/cluster-api v1.4.2
 	sigs.k8s.io/controller-runtime v0.14.6
 	sigs.k8s.io/kustomize/kyaml v0.13.9
 )
@@ -33,6 +32,7 @@ require (
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.3.0 // indirect
+	sigs.k8s.io/cluster-api v1.4.2 // indirect
 )
 
 require (

@@ -11,11 +11,11 @@ import (
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/token"
 
-	"github.com/henderiw-nephio/nephio-controllers/pkg/applicator"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
 	"github.com/nephio-project/nephio-controller-poc/pkg/porch"
 	ctrlrconfig "github.com/nephio-project/nephio/controllers/pkg/reconcilers/config"
 	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
+	"github.com/nephio-project/nephio/controllers/pkg/resource"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -70,7 +70,7 @@ func main() {
 	setupLog.Info("setup controller")
 	ctx := ctrl.SetupSignalHandler()
 	// runs a generic client which keeps the connection open
-	gc := giteaclient.New(applicator.NewAPIPatchingApplicator(mgr.GetClient()))
+	gc := giteaclient.New(resource.NewAPIPatchingApplicator(mgr.GetClient()))
 	go gc.Start(ctx)
 
 	porchClient, err := porch.CreateClient()

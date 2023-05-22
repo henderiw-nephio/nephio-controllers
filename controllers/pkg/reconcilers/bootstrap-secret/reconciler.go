@@ -142,7 +142,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 						nephioAppKey:   bootstrapApp,
 						clusterNameKey: clusterName,
 					})
-					if err := clusterClient.Apply(ctx, cr); err != nil {
+					if err := clusterClient.Apply(ctx, newcr); err != nil {
 						msg := fmt.Sprintf("cannot apply secret to cluster %s", clusterName)
 						r.l.Error(err, msg)
 						return ctrl.Result{RequeueAfter: 10 * time.Second}, errors.Wrap(err, msg)

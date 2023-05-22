@@ -116,6 +116,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		return ctrl.Result{}, errors.Wrap(err, msg)
 	}
 	if stagingPR {
+		r.l.Info("reconcile package revision")
 		resources, namespacePresent, err := r.getResources(ctx, req)
 		if err != nil {
 			msg := "cannot get resources"
@@ -207,7 +208,6 @@ func (r *reconciler) IsStagingPackageRevision(ctx context.Context, cr *porchv1al
 			stagingRepoNames = append(stagingRepoNames, repo.GetName())
 		}
 	}
-	r.l.Info("staging repos", "repos", stagingRepoNames)
 	for _, stagingRepoName := range stagingRepoNames {
 		if cr.Spec.RepositoryName == stagingRepoName {
 			return true, nil

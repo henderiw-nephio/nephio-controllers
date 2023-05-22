@@ -96,7 +96,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	if cr.GetAnnotations()[nephioAppKey] == configsyncApp &&
 		cr.GetAnnotations()[clusterNameKey] != "" &&
 		cr.GetAnnotations()[clusterNameKey] != "mgmt" {
-		r.l.Info("reconcile")
+		r.l.Info("reconcile secret")
 		clusterName := cr.GetAnnotations()[clusterNameKey]
 
 		secrets := &corev1.SecretList{}

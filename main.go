@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-packages"
+	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/token"
 
@@ -15,6 +15,7 @@ import (
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
 	"github.com/nephio-project/nephio-controller-poc/pkg/porch"
 	ctrlrconfig "github.com/nephio-project/nephio/controllers/pkg/reconcilers/config"
+	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -22,7 +23,6 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
 )
 
 var (

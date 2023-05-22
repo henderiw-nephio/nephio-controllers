@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/go-logr/logr"
@@ -220,9 +221,12 @@ func (r *reconciler) deleteToken(ctx context.Context, giteaClient *gitea.Client,
 	r.l.Info("token deleted", "name", cr.GetTokenName())
 	_, err = giteaClient.DeleteAccessToken(cr.GetTokenName())
 	if err != nil {
-		r.l.Error(err, "cannot delete token")
-		cr.SetConditions(infrav1alpha1.Failed(err.Error()))
-		return err
+		// validate of error is not found, in which case we can continue w/o error
+		if !strings.Contains(err.Error(), "couldn't be found") {
+			r.l.Error(err, "cannot delete token")
+			cr.SetConditions(infrav1alpha1.Failed(err.Error()))
+			return err
+		}
 	}
 	r.l.Info("token deleted", "name", cr.GetTokenName())
 	return nil

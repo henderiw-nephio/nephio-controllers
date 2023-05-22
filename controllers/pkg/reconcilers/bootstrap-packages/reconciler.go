@@ -48,6 +48,7 @@ const (
 //+kubebuilder:rbac:groups=cluster.x-k8s.io,resources=clusters/status,verbs=get
 //+kubebuilder:rbac:groups=porch.kpt.dev,resources=packagerevisions,verbs=get;list;watch
 //+kubebuilder:rbac:groups=porch.kpt.dev,resources=packagerevisions/status,verbs=get
+//+kubebuilder:rbac:groups=config.porch.kpt.dev,resources=repositories,verbs=get;list;watch
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *reconciler) SetupWithManager(mgr ctrl.Manager, c any) (map[schema.GroupVersionKind]chan event.GenericEvent, error) {
@@ -55,6 +56,14 @@ func (r *reconciler) SetupWithManager(mgr ctrl.Manager, c any) (map[schema.Group
 	if !ok {
 		return nil, fmt.Errorf("cannot initialize, expecting controllerConfig, got: %s", reflect.TypeOf(c).Name())
 	}
+
+	if err := porchv1alpha1.AddToScheme(mgr.GetScheme()); err != nil {
+		return nil, err
+	}
+	if err := porchconfigv1alpha1.AddToScheme(mgr.GetScheme()); err != nil {
+		return nil, err
+	}
+
 
 	r.Client = mgr.GetClient()
 	r.porchClient = cfg.PorchClient

@@ -33,6 +33,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/utils/pointer"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -182,6 +183,15 @@ func (r *reconciler) createToken(ctx context.Context, giteaClient *gitea.Client,
 				Namespace:   cr.GetNamespace(),
 				Name:        cr.GetName(),
 				Annotations: cr.GetAnnotations(),
+				OwnerReferences: []metav1.OwnerReference{
+					{
+						APIVersion: cr.APIVersion,
+						Kind:       cr.Kind,
+						Name:       cr.Name,
+						UID:        cr.UID,
+						Controller: pointer.Bool(true),
+					},
+				},
 			},
 			Data: map[string][]byte{
 				"username": []byte(u.UserName),
@@ -201,25 +211,27 @@ func (r *reconciler) createToken(ctx context.Context, giteaClient *gitea.Client,
 }
 
 func (r *reconciler) deleteToken(ctx context.Context, giteaClient *gitea.Client, cr *infrav1alpha1.Token) error {
-	secret := &corev1.Secret{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: corev1.SchemeGroupVersion.Identifier(),
-			Kind:       reflect.TypeOf(corev1.Secret{}).Name(),
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: cr.GetNamespace(),
-			Name:      cr.GetName(),
-		},
-	}
-	err := r.Delete(ctx, secret)
-	if resource.IgnoreNotFound(err) != nil {
-		r.l.Error(err, "cannot delete access token secret")
-		cr.SetConditions(infrav1alpha1.Failed(err.Error()))
-		return err
-	}
+	/*
+		secret := &corev1.Secret{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: corev1.SchemeGroupVersion.Identifier(),
+				Kind:       reflect.TypeOf(corev1.Secret{}).Name(),
+			},
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: cr.GetNamespace(),
+				Name:      cr.GetName(),
+			},
+		}
+		err := r.Delete(ctx, secret)
+		if resource.IgnoreNotFound(err) != nil {
+			r.l.Error(err, "cannot delete access token secret")
+			cr.SetConditions(infrav1alpha1.Failed(err.Error()))
+			return err
+		}
 
-	r.l.Info("secret deleted", "name", cr.GetTokenName())
-	_, err = giteaClient.DeleteAccessToken(cr.GetTokenName())
+		r.l.Info("secret deleted", "name", cr.GetTokenName())
+	*/
+	_, err := giteaClient.DeleteAccessToken(cr.GetTokenName())
 	if err != nil {
 		// validate of error is not found, in which case we can continue w/o error
 		if !strings.Contains(err.Error(), "couldn't be found") {

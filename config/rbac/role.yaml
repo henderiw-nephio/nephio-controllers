@@ -28,6 +28,14 @@ rules:
   verbs:
   - get
 - apiGroups:
+  - config.porch.kpt.dev
+  resources:
+  - repositories
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - porch.kpt.dev
   resources:
   - packagerevisions

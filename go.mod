@@ -10,6 +10,7 @@ replace k8s.io/client-go => k8s.io/client-go v0.26.1
 
 require (
 	code.gitea.io/sdk/gitea v0.15.1-0.20230509035020-970776d1c1e9
+	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230504200302-14c7b353e6b6
 	github.com/nephio-project/nephio-controller-poc v0.0.2
 	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230519005301-c26ff87a0550
 	go.uber.org/zap v1.24.0
@@ -18,7 +19,6 @@ require (
 )
 
 require (
-	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230504200302-14c7b353e6b6 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/davidmz/go-pageant v1.0.2 // indirect
 	github.com/go-errors/errors v1.4.2 // indirect

@@ -152,3 +152,5 @@ spec:
           value: "true"
         - name: ENABLE_BOOTSTRAPSECRETS
           value: "true"
+        - name: ENABLE_BOOTSTRAPPACKAGES
+          value: "true"

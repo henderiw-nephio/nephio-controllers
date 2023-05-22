@@ -44,7 +44,6 @@ func init() {
 
 const (
 	clusterNameKey      = "nephio.org/cluster-name"
-	stagingNameKey      = "nephio.org/staging"
 	nephioAppKey        = "nephio.org/app"
 	configsyncApp       = "configsync"
 	configsyncNamespace = "config-management-system"
@@ -53,8 +52,6 @@ const (
 //+kubebuilder:rbac:groups="*",resources=secrets,verbs=get;list;watch
 //+kubebuilder:rbac:groups=cluster.x-k8s.io,resources=clusters,verbs=get;list;watch
 //+kubebuilder:rbac:groups=cluster.x-k8s.io,resources=clusters/status,verbs=get
-//+kubebuilder:rbac:groups=porch.kpt.dev,resources=packagerevisions,verbs=get;list;watch
-//+kubebuilder:rbac:groups=porch.kpt.dev,resources=packagerevisions/status,verbs=get
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *reconciler) SetupWithManager(mgr ctrl.Manager, c any) (map[schema.GroupVersionKind]chan event.GenericEvent, error) {

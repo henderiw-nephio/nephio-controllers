@@ -79,7 +79,7 @@ spec:
           value: "true"
         - name: ENABLE_TOKENS
           value: "true"
-        - name: ENABLE_BOOTSTRAP
+        - name: ENABLE_BOOTSTRAPSECRETS
           value: "true"
         image: europe-docker.pkg.dev/srlinux/eu.gcr.io/nephio-operator:latest
         livenessProbe:

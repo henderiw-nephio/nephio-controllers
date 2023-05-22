@@ -122,9 +122,6 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			r.l.Error(err, msg)
 			return ctrl.Result{}, errors.Wrap(err, msg)
 		}
-		for _, resource := range resources {
-			r.l.Info("resource", "resource", resource)
-		}
 		// we expect the clusterName to be applied to all resources in the
 		// package revision resources, so we find the clustername by looking at the
 		// first resource in the resource list

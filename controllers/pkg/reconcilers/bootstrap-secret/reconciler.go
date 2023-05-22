@@ -39,7 +39,7 @@ import (
 )
 
 func init() {
-	reconcilerinterface.Register("bootstrapsecret", &reconciler{})
+	reconcilerinterface.Register("bootstrapsecrets", &reconciler{})
 }
 
 const (

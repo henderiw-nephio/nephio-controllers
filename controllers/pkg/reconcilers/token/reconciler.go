@@ -218,7 +218,7 @@ func (r *reconciler) deleteToken(ctx context.Context, giteaClient *gitea.Client,
 		return err
 	}
 
-	r.l.Info("token deleted", "name", cr.GetTokenName())
+	r.l.Info("secret deleted", "name", cr.GetTokenName())
 	_, err = giteaClient.DeleteAccessToken(cr.GetTokenName())
 	if err != nil {
 		// validate of error is not found, in which case we can continue w/o error

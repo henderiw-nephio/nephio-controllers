@@ -1,5 +1,5 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: ClusterRoleBinding
 metadata:
   annotations: {}
   creationTimestamp: null
@@ -10,22 +10,12 @@ metadata:
     app.kubernetes.io/name: nephio
     app.kubernetes.io/part-of: nephio
     app.kubernetes.io/version: tbd
-  name: nephio-controller-controller-role
-rules:
-- apiGroups:
-  - infra.nephio.org
-  resources:
-  - networks
-  - networks/status
-  - repositories
-  - repositories/status
-  - tokens
-  - tokens/status
-  verbs:
-  - get
-  - list
-  - watch
-  - update
-  - patch
-  - create
-  - delete
+  name: nephio-controller-network-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nephio-controller-network-role
+subjects:
+- kind: ServiceAccount
+  name: nephio-controller
+  namespace: nephio-system

@@ -173,7 +173,6 @@ func (r *reconciler) createToken(ctx context.Context, giteaClient *gitea.Client,
 			return err
 		}
 		r.l.Info("token created", "name", cr.GetName())
-		// owner reference dont work since this is a cross-namespace resource
 		secret := &corev1.Secret{
 			TypeMeta: metav1.TypeMeta{
 				APIVersion: corev1.SchemeGroupVersion.Identifier(),
@@ -211,26 +210,6 @@ func (r *reconciler) createToken(ctx context.Context, giteaClient *gitea.Client,
 }
 
 func (r *reconciler) deleteToken(ctx context.Context, giteaClient *gitea.Client, cr *infrav1alpha1.Token) error {
-	/*
-		secret := &corev1.Secret{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: corev1.SchemeGroupVersion.Identifier(),
-				Kind:       reflect.TypeOf(corev1.Secret{}).Name(),
-			},
-			ObjectMeta: metav1.ObjectMeta{
-				Namespace: cr.GetNamespace(),
-				Name:      cr.GetName(),
-			},
-		}
-		err := r.Delete(ctx, secret)
-		if resource.IgnoreNotFound(err) != nil {
-			r.l.Error(err, "cannot delete access token secret")
-			cr.SetConditions(infrav1alpha1.Failed(err.Error()))
-			return err
-		}
-
-		r.l.Info("secret deleted", "name", cr.GetTokenName())
-	*/
 	_, err := giteaClient.DeleteAccessToken(cr.GetTokenName())
 	if err != nil {
 		// validate of error is not found, in which case we can continue w/o error

@@ -9,11 +9,16 @@ import (
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-packages"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
+	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
+	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy"
+	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy/ipam"
+	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy/vlan"
 
+	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
 	"github.com/nephio-project/nephio-controller-poc/pkg/porch"
-	ctrlrconfig "github.com/nephio-project/nephio/controllers/pkg/reconcilers/config"
+
 	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
 	"github.com/nephio-project/nephio/controllers/pkg/resource"
 	"go.uber.org/zap/zapcore"
@@ -82,6 +87,12 @@ func main() {
 	ctrlCfg := &ctrlrconfig.ControllerConfig{
 		GiteaClient: gc,
 		PorchClient: porchClient,
+		IpamClientProxy: ipam.New(ctx, clientproxy.Config{
+			Address: os.Getenv("RESOURCE_BACKEND"),
+		}),
+		VlanClientProxy: vlan.New(ctx, clientproxy.Config{
+			Address: os.Getenv("RESOURCE_BACKEND"),
+		}),
 	}
 
 	for name, reconciler := range reconcilerinterface.Reconcilers {
@@ -91,6 +102,7 @@ func main() {
 				setupLog.Error(err, "unable to set up health check")
 				os.Exit(1)
 			}
+
 		}
 	}
 	//+kubebuilder:scaffold:builder

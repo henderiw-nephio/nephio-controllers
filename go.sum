@@ -583,8 +583,10 @@ github.com/hashicorp/vault/sdk v0.5.0/go.mod h1:UJZHlfwj7qUJG8g22CuxUgkdJouFrBNv
 github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
 github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87 h1:xixZ2bWeofWV68J+x6AzmKuVM/JWCQwkWm6GW/MUR6I=
 github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87/go.mod h1:CtWFDAQgb7dxtzFs4tWbplKIe2jSi3+5vKbgIO0SLnQ=
-github.com/henderiw-nephio/network v0.0.0-20230526171515-58b63dd3be34 h1:0syM+6XTN9u3qLqYmfCyoX7w9YsfkGMasI06UJeCDX0=
-github.com/henderiw-nephio/network v0.0.0-20230526171515-58b63dd3be34/go.mod h1:ylb52sYkUp+8rheX3RqBqGwX9t/NAiLN13hlyiqJEvc=
+github.com/henderiw-nephio/network v0.0.0-20230526173330-7fee8c3ea0c9 h1:N8xL6MAXII5i3Y0+Z1SsGF9K8mo66CyzpumDAXK3NWo=
+github.com/henderiw-nephio/network v0.0.0-20230526173330-7fee8c3ea0c9/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
+github.com/henderiw-nephio/network v0.0.0-20230526174359-6e16d26d9736 h1:h/TxN1q1JKhtwzMD2za7zzLHKqoECpGO0EPZdDk0RGs=
+github.com/henderiw-nephio/network v0.0.0-20230526174359-6e16d26d9736/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=

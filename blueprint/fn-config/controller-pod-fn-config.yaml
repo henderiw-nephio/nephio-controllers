@@ -11,6 +11,18 @@ spec:
   permissionRequests:
     controller:
       scope: cluster
+    target:
+      scope: cluster
+      permissions:
+      - apiGroups: ["*"]
+        resources: [secrets]
+        verbs: [get, list, watch]
+      - apiGroups: [inv.nephio.org]
+        resources: [targets]
+        verbs: [get, list, watch, update, patch, create, delete]
+      - apiGroups: [inv.nephio.org]
+        resources: [targets/status]
+        verbs: [get, list, watch, update, patch, create, delete]
     network:
       scope: cluster
       permissions:
@@ -176,4 +188,6 @@ spec:
         - name: ENABLE_BOOTSTRAPPACKAGES
           value: "true"
         - name: ENABLE_NETWORKS
+          value: "true"
+        - name: ENABLE_TARGETS
           value: "true"

@@ -27,8 +27,8 @@ import (
 	porchv1alpha1 "github.com/GoogleContainerTools/kpt/porch/api/porch/v1alpha1"
 	porchconfigv1alpha1 "github.com/GoogleContainerTools/kpt/porch/api/porchconfig/v1alpha1"
 	"github.com/go-logr/logr"
+	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
 	"github.com/nephio-project/nephio/controllers/pkg/cluster"
-	ctrlconfig "github.com/nephio-project/nephio/controllers/pkg/reconcilers/config"
 	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
 	"github.com/nephio-project/nephio/controllers/pkg/resource"
 	"github.com/pkg/errors"
@@ -65,7 +65,7 @@ const (
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *reconciler) SetupWithManager(mgr ctrl.Manager, c any) (map[schema.GroupVersionKind]chan event.GenericEvent, error) {
-	cfg, ok := c.(*ctrlconfig.ControllerConfig)
+	cfg, ok := c.(*ctrlrconfig.ControllerConfig)
 	if !ok {
 		return nil, fmt.Errorf("cannot initialize, expecting controllerConfig, got: %s", reflect.TypeOf(c).Name())
 	}

@@ -10,6 +10,8 @@ import (
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
 	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
+	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/target"
+	"github.com/henderiw-nephio/network/pkg/targets"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
 	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy"
 	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy/ipam"
@@ -84,15 +86,17 @@ func main() {
 		os.Exit(1)
 	}
 
+	backendAddress := fmt.Sprintf("%s.%s.svc.cluster.local:%s", "resource-backend-controller-grpc-svc", "backend-system", "9999")
 	ctrlCfg := &ctrlrconfig.ControllerConfig{
 		GiteaClient: gc,
 		PorchClient: porchClient,
 		IpamClientProxy: ipam.New(ctx, clientproxy.Config{
-			Address: os.Getenv("RESOURCE_BACKEND"),
+			Address: backendAddress,
 		}),
 		VlanClientProxy: vlan.New(ctx, clientproxy.Config{
-			Address: os.Getenv("RESOURCE_BACKEND"),
+			Address: backendAddress,
 		}),
+		Targets: targets.New(),
 	}
 
 	for name, reconciler := range reconcilerinterface.Reconcilers {

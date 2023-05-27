@@ -13,7 +13,7 @@ replace sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.14.6
 require (
 	code.gitea.io/sdk/gitea v0.15.1-0.20230509035020-970776d1c1e9
 	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230523013102-3f2fa7eb179c
-	github.com/henderiw-nephio/network v0.0.0-20230526174359-6e16d26d9736
+	github.com/henderiw-nephio/network v0.0.0-20230527031345-fe4331b46c3d
 	github.com/nephio-project/api v0.0.0-20230522173958-63a41669b495
 	github.com/nephio-project/nephio-controller-poc v0.0.2
 	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230523155359-0d37fc7f7a8d

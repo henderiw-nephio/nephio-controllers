@@ -585,6 +585,8 @@ github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87 h1:xixZ2bWeofWV68J
 github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87/go.mod h1:CtWFDAQgb7dxtzFs4tWbplKIe2jSi3+5vKbgIO0SLnQ=
 github.com/henderiw-nephio/network v0.0.0-20230527031345-fe4331b46c3d h1:n7oRQWPGZNDjvfP+5NSibiTo/EFm2zSbgQOXtA81oUo=
 github.com/henderiw-nephio/network v0.0.0-20230527031345-fe4331b46c3d/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
+github.com/henderiw-nephio/network v0.0.0-20230527040311-7fed42383842 h1:i5B0rHyAWM2x6oEWnatErCeYMTSHWwAmrgZFflI/YsA=
+github.com/henderiw-nephio/network v0.0.0-20230527040311-7fed42383842/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=

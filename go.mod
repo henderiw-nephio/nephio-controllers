@@ -13,11 +13,11 @@ replace sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.14.6
 require (
 	code.gitea.io/sdk/gitea v0.15.1-0.20230509035020-970776d1c1e9
 	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230523013102-3f2fa7eb179c
-	github.com/henderiw-nephio/network v0.0.0-20230527070155-d28a2aeb5c78
+	github.com/henderiw-nephio/network v0.0.0-20230527070844-7ad23f9874a8
 	github.com/nephio-project/api v0.0.0-20230522173958-63a41669b495
 	github.com/nephio-project/nephio-controller-poc v0.0.2
 	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230523155359-0d37fc7f7a8d
-	github.com/nokia/k8s-ipam v0.0.4-0.20230526170941-1c93caca3cc3
+	github.com/nokia/k8s-ipam v0.0.4-0.20230527063457-05bda81596a5
 	go.uber.org/zap v1.24.0
 	sigs.k8s.io/controller-runtime v0.15.0
 	sigs.k8s.io/kustomize/kyaml v0.14.2

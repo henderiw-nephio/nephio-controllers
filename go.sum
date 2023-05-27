@@ -583,14 +583,8 @@ github.com/hashicorp/vault/sdk v0.5.0/go.mod h1:UJZHlfwj7qUJG8g22CuxUgkdJouFrBNv
 github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb/go.mod h1:+NfK9FKeTrX5uv1uIXGdwYDTeHna2qgaIlx54MXqjAM=
 github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87 h1:xixZ2bWeofWV68J+x6AzmKuVM/JWCQwkWm6GW/MUR6I=
 github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87/go.mod h1:CtWFDAQgb7dxtzFs4tWbplKIe2jSi3+5vKbgIO0SLnQ=
-github.com/henderiw-nephio/network v0.0.0-20230527031345-fe4331b46c3d h1:n7oRQWPGZNDjvfP+5NSibiTo/EFm2zSbgQOXtA81oUo=
-github.com/henderiw-nephio/network v0.0.0-20230527031345-fe4331b46c3d/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
-github.com/henderiw-nephio/network v0.0.0-20230527040311-7fed42383842 h1:i5B0rHyAWM2x6oEWnatErCeYMTSHWwAmrgZFflI/YsA=
-github.com/henderiw-nephio/network v0.0.0-20230527040311-7fed42383842/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
-github.com/henderiw-nephio/network v0.0.0-20230527060850-5f285b1b287e h1:ff1aRebcQpwRvGSFW3k9Pav63flZ9zsyFeW3t75++Y0=
-github.com/henderiw-nephio/network v0.0.0-20230527060850-5f285b1b287e/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
-github.com/henderiw-nephio/network v0.0.0-20230527070155-d28a2aeb5c78 h1:YZuRSowiHmgp6q2tfmGTmmh7iMNZlk8t4t+B5rz7kj4=
-github.com/henderiw-nephio/network v0.0.0-20230527070155-d28a2aeb5c78/go.mod h1:nw7w0vin4IbTtYv0/nxK6u9dEb6LFKZ4sdtijbuUqNk=
+github.com/henderiw-nephio/network v0.0.0-20230527070844-7ad23f9874a8 h1:3MB78Pim9c80+gb0mdN1/wfAuQLdrn8z3nyQEB6kZIs=
+github.com/henderiw-nephio/network v0.0.0-20230527070844-7ad23f9874a8/go.mod h1:Lvr5vDQEPi2k0/x07khCj3wF01qKJLb0gyvwU/LYx9s=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
@@ -765,8 +759,8 @@ github.com/nephio-project/nephio-controller-poc v0.0.2/go.mod h1:oE13Jb5gopskPCv
 github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230523155359-0d37fc7f7a8d h1:f2yi53eaP50aM2lxWFVKZQpN/IT400UVFW/XXnZE6lM=
 github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230523155359-0d37fc7f7a8d/go.mod h1:nCrE3Ab5jsC5UJuPq/EntZdwLw3GaNjjoKRS3UzNMqE=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
-github.com/nokia/k8s-ipam v0.0.4-0.20230526170941-1c93caca3cc3 h1:BGlLtMvrZs4SCE5WWMr/enMX07PE0CwgRJTMDLLYYWw=
-github.com/nokia/k8s-ipam v0.0.4-0.20230526170941-1c93caca3cc3/go.mod h1:OKpWLX46crCZ4fJAfo14lXSQ1RXHhft8NmFzt71IKUw=
+github.com/nokia/k8s-ipam v0.0.4-0.20230527063457-05bda81596a5 h1:BoLlcN4eV01M75ar73wn9ohFgWechuJCXJeEYsScDkM=
+github.com/nokia/k8s-ipam v0.0.4-0.20230527063457-05bda81596a5/go.mod h1:OKpWLX46crCZ4fJAfo14lXSQ1RXHhft8NmFzt71IKUw=
 github.com/oklog/run v1.0.0/go.mod h1:dlhp/R75TPv97u0XWUtDeV/lRKWPKSdTuV0TZvrmrQA=
 github.com/oklog/run v1.1.0 h1:GEenZ1cK0+q0+wsJew9qUg/DyD8k3JzYsZAi5gYi2mA=
 github.com/oklog/run v1.1.0/go.mod h1:sVPdnTZT1zYwAJeCMu2Th4T21pA3FPOQRfWjQlk7DVU=

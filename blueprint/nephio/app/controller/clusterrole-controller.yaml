@@ -13,6 +13,19 @@ metadata:
   name: nephio-controller-controller-role
 rules:
 - apiGroups:
+  - config.nephio.org
+  resources:
+  - networks
+  - networks/status
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - create
+  - delete
+- apiGroups:
   - infra.nephio.org
   resources:
   - networks

@@ -10,6 +10,7 @@ import (
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
 	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
+	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/networkconfig"
 	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/target"
 	"github.com/henderiw-nephio/network/pkg/targets"
 	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
@@ -23,6 +24,7 @@ import (
 
 	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
 	"github.com/nephio-project/nephio/controllers/pkg/resource"
+	//"github.com/nokia/k8s-ipam/pkg/resource"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -102,7 +104,7 @@ func main() {
 	for name, reconciler := range reconcilerinterface.Reconcilers {
 		setupLog.Info("reconciler", "name", name, "enabled", IsReconcilerEnabled(name))
 		if IsReconcilerEnabled(name) {
-			if _, err := reconciler.SetupWithManager(mgr, ctrlCfg); err != nil {
+			if _, err := reconciler.SetupWithManager(ctx, mgr, ctrlCfg); err != nil {
 				setupLog.Error(err, "unable to set up health check")
 				os.Exit(1)
 			}

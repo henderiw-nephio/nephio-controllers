@@ -44,6 +44,12 @@ spec:
       - apiGroups: [vlan.alloc.nephio.org]
         resources: [vlandatabases/status, vlans/status]
         verbs: [get, list, watch, update, patch, create, delete]
+      - apiGroups: [config.nephio.org]
+        resources: [networks]
+        verbs: [get, list, watch, update, patch, create, delete]
+      - apiGroups: [config.nephio.org]
+        resources: [networks/status]
+        verbs: [get, list, watch, update, patch, create, delete]
     repository:
       scope: cluster
       permissions:
@@ -190,4 +196,6 @@ spec:
         - name: ENABLE_NETWORKS
           value: "true"
         - name: ENABLE_TARGETS
+          value: "true"
+        - name: ENABLE_NETWORKCONFIGS
           value: "true"

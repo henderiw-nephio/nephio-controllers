@@ -79,6 +79,8 @@ spec:
           value: "true"
         - name: ENABLE_TARGETS
           value: "true"
+        - name: ENABLE_NETWORKCONFIGS
+          value: "true"
         image: europe-docker.pkg.dev/srlinux/eu.gcr.io/nephio-operator:latest
         livenessProbe:
           httpGet:

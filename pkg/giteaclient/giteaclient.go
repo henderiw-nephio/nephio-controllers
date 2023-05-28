@@ -25,6 +25,7 @@ import (
 	"code.gitea.io/sdk/gitea"
 	"github.com/go-logr/logr"
 	"github.com/nephio-project/nephio/controllers/pkg/resource"
+	//"github.com/nokia/k8s-ipam/pkg/resource"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/log"

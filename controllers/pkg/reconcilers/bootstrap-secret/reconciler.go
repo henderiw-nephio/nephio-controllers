@@ -25,7 +25,10 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/nephio-project/nephio/controllers/pkg/cluster"
 	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
+
 	"github.com/nephio-project/nephio/controllers/pkg/resource"
+	//"github.com/nokia/k8s-ipam/pkg/meta"
+	//"github.com/nokia/k8s-ipam/pkg/resource"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -55,7 +58,7 @@ const (
 //+kubebuilder:rbac:groups=cluster.x-k8s.io,resources=clusters/status,verbs=get
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *reconciler) SetupWithManager(mgr ctrl.Manager, c any) (map[schema.GroupVersionKind]chan event.GenericEvent, error) {
+func (r *reconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, c any) (map[schema.GroupVersionKind]chan event.GenericEvent, error) {
 	r.Client = mgr.GetClient()
 
 	return nil, ctrl.NewControllerManagedBy(mgr).

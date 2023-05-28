@@ -13,11 +13,11 @@ replace sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.14.6
 require (
 	code.gitea.io/sdk/gitea v0.15.1-0.20230509035020-970776d1c1e9
 	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230523013102-3f2fa7eb179c
-	github.com/henderiw-nephio/network v0.0.0-20230527070844-7ad23f9874a8
+	github.com/henderiw-nephio/network v0.0.0-20230528173613-0a32dbd17ea9
 	github.com/nephio-project/api v0.0.0-20230522173958-63a41669b495
 	github.com/nephio-project/nephio-controller-poc v0.0.2
-	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230523155359-0d37fc7f7a8d
-	github.com/nokia/k8s-ipam v0.0.4-0.20230527063457-05bda81596a5
+	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230527153803-31b37fcf142b
+	github.com/nokia/k8s-ipam v0.0.4-0.20230528075746-ce1850e02c0f
 	go.uber.org/zap v1.24.0
 	sigs.k8s.io/controller-runtime v0.15.0
 	sigs.k8s.io/kustomize/kyaml v0.14.2
@@ -36,7 +36,7 @@ require (
 	github.com/Shopify/ejson v1.3.3 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/apparentlymart/go-cidr v1.1.0 // indirect
-	github.com/armon/go-metrics v0.4.0 // indirect
+	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/aws/aws-sdk-go v1.44.206 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.16.4 // indirect
@@ -86,7 +86,7 @@ require (
 	github.com/hashicorp/consul/api v1.20.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-hclog v1.2.0 // indirect
+	github.com/hashicorp/go-hclog v1.5.0 // indirect
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.9 // indirect
@@ -114,7 +114,7 @@ require (
 	github.com/kr/fs v0.1.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.17 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
@@ -126,7 +126,7 @@ require (
 	github.com/openconfig/gnmic v0.31.0 // indirect
 	github.com/openconfig/goyang v1.4.0 // indirect
 	github.com/openconfig/grpctunnel v0.0.0-20220819142823-6f5422b8ca70 // indirect
-	github.com/openconfig/ygot v0.28.0 // indirect
+	github.com/openconfig/ygot v0.28.3 // indirect
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/pkg/sftp v1.13.5 // indirect
 	github.com/rs/zerolog v1.29.0 // indirect
@@ -142,18 +142,20 @@ require (
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go4.org/intern v0.0.0-20220617035311-6925f38cc365 // indirect
+	go4.org/intern v0.0.0-20230525184215-6c62f75575cb // indirect
 	go4.org/netipx v0.0.0-20230303233057-f1b76eb4bb35 // indirect
-	go4.org/unsafe/assume-no-moving-gc v0.0.0-20220617031537-928513b29760 // indirect
+	go4.org/unsafe/assume-no-moving-gc v0.0.0-20230525183740-e7c30c78aeb2 // indirect
 	gocloud.dev v0.25.1-0.20220408200107-09b10f7359f7 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.114.0 // indirect
-	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1 // indirect
+	google.golang.org/genproto v0.0.0-20230525234025-438c736192d0 // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20230525234020-1aefcd67740a // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230526203410-71b5a4ffd15e // indirect
 	google.golang.org/grpc v1.55.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
-	inet.af/netaddr v0.0.0-20220811202034-502d2d690317 // indirect
+	inet.af/netaddr v0.0.0-20230525184311-b8eac61e914a // indirect
 	sigs.k8s.io/cluster-api v1.4.2 // indirect
 )
 
@@ -175,7 +177,7 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/imdario/mergo v0.3.15 // indirect
+	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -207,7 +209,7 @@ require (
 	k8s.io/client-go v1.5.2
 	k8s.io/component-base v0.27.2 // indirect
 	k8s.io/klog/v2 v2.100.1 // indirect
-	k8s.io/kube-openapi v0.0.0-20230523194449-df37dd07aa00 // indirect
+	k8s.io/kube-openapi v0.0.0-20230525220651-2546d827e515 // indirect
 	k8s.io/utils v0.0.0-20230505201702-9f6742963106
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect

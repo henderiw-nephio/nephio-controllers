@@ -592,6 +592,8 @@ github.com/henderiw-nephio/network v0.0.0-20230530043902-6ebf234d2c70 h1:xmlmget
 github.com/henderiw-nephio/network v0.0.0-20230530043902-6ebf234d2c70/go.mod h1:2E0HbdwT8xPMdWKJKj85JIprGOXEAY3rGbLXMtwFKsw=
 github.com/henderiw-nephio/network v0.0.0-20230530051934-5e907c65a129 h1:5vabPdtEtKF32rOfNDZCK6BhrN7U4ibtEJu1YCvbXa8=
 github.com/henderiw-nephio/network v0.0.0-20230530051934-5e907c65a129/go.mod h1:2E0HbdwT8xPMdWKJKj85JIprGOXEAY3rGbLXMtwFKsw=
+github.com/henderiw-nephio/network v0.0.0-20230530053416-5e001d4ce3a5 h1:Upd15/3BYYBKYD8c/OVQghcroMIC3kJ9ik6LdmDUnPg=
+github.com/henderiw-nephio/network v0.0.0-20230530053416-5e001d4ce3a5/go.mod h1:2E0HbdwT8xPMdWKJKj85JIprGOXEAY3rGbLXMtwFKsw=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=

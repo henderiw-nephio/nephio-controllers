@@ -19,6 +19,7 @@ package ctrlrconfig
 import (
 	"time"
 
+	"github.com/henderiw-nephio/network/pkg/targets"
 	"github.com/nephio-project/nephio/controllers/pkg/giteaclient"
 	ipamv1alpha1 "github.com/nokia/k8s-ipam/apis/alloc/ipam/v1alpha1"
 	vlanv1alpha1 "github.com/nokia/k8s-ipam/apis/alloc/vlan/v1alpha1"
@@ -35,5 +36,5 @@ type ControllerConfig struct {
 	Address         string // backend server address
 	IpamClientProxy clientproxy.Proxy[*ipamv1alpha1.NetworkInstance, *ipamv1alpha1.IPAllocation]
 	VlanClientProxy clientproxy.Proxy[*vlanv1alpha1.VLANDatabase, *vlanv1alpha1.VLANAllocation]
-	//Targets         targets.Target
+	Targets         targets.Target
 }

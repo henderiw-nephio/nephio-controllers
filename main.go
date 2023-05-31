@@ -10,11 +10,11 @@ import (
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
 
-	//_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
-	//_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/networkconfig"
-	//_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/target"
-	//"github.com/henderiw-nephio/network/pkg/targets"
-	//_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
+	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
+	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/networkconfig"
+	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/target"
+	"github.com/henderiw-nephio/network/pkg/targets"
+	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
 	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
 	porchclient "github.com/nephio-project/nephio/controllers/pkg/porch/client"
@@ -96,7 +96,7 @@ func main() {
 		VlanClientProxy: vlan.New(ctx, clientproxy.Config{
 			Address: backendAddress,
 		}),
-		//Targets: targets.New(),
+		Targets: targets.New(),
 	}
 
 	for name, reconciler := range reconcilerinterface.Reconcilers {

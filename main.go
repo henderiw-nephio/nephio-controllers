@@ -9,22 +9,20 @@ import (
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-packages"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
-	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
-	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/networkconfig"
-	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/target"
-	"github.com/henderiw-nephio/network/pkg/targets"
-	_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
+
+	//_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
+	//_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/networkconfig"
+	//_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/target"
+	//"github.com/henderiw-nephio/network/pkg/targets"
+	//_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/repository"
+	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
+	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
+	porchclient "github.com/nephio-project/nephio/controllers/pkg/porch/client"
+	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
+	"github.com/nephio-project/nephio/controllers/pkg/resource"
 	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy"
 	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy/ipam"
 	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy/vlan"
-
-	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
-	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
-	"github.com/nephio-project/nephio-controller-poc/pkg/porch"
-
-	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
-	"github.com/nephio-project/nephio/controllers/pkg/resource"
-	//"github.com/nokia/k8s-ipam/pkg/resource"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -82,9 +80,9 @@ func main() {
 	gc := giteaclient.New(resource.NewAPIPatchingApplicator(mgr.GetClient()))
 	go gc.Start(ctx)
 
-	porchClient, err := porch.CreateClient()
+	porchClient, err := porchclient.CreateClient(ctrl.GetConfigOrDie())
 	if err != nil {
-		setupLog.Error(err, "unable to create porch client")
+		setupLog.Error(err, "unable to create porch client:")
 		os.Exit(1)
 	}
 
@@ -98,7 +96,7 @@ func main() {
 		VlanClientProxy: vlan.New(ctx, clientproxy.Config{
 			Address: backendAddress,
 		}),
-		Targets: targets.New(),
+		//Targets: targets.New(),
 	}
 
 	for name, reconciler := range reconcilerinterface.Reconcilers {

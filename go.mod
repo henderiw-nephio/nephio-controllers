@@ -9,16 +9,16 @@ go 1.20
 //replace k8s.io/client-go => k8s.io/client-go v0.26.1
 
 //replace sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.14.6
-replace github.com/nephio-project/api => ../nephio-api
+//replace github.com/nephio-project/api => ../nephio-api
 
 require (
 	code.gitea.io/sdk/gitea v0.15.1-0.20230509035020-970776d1c1e9
 	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230504200302-14c7b353e6b6
 	github.com/go-logr/logr v1.2.4
-	github.com/henderiw-nephio/network v0.0.0-20230531185459-d97aab9eeac2
-	github.com/nephio-project/api v0.0.0-20230522173958-63a41669b495
+	github.com/henderiw-nephio/network v0.0.0-20230602130921-064ffb77b249
+	github.com/nephio-project/api v0.0.0-20230531191407-cf0da6d1f7c7
 	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230531154408-a4237c40cb76
-	github.com/nokia/k8s-ipam v0.0.4-0.20230531091740-a5fc07f8c2e2
+	github.com/nokia/k8s-ipam v0.0.4-0.20230602042608-ec096ab74332
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.24.0
 	k8s.io/api v0.27.2

@@ -117,6 +117,45 @@ rules:
   - create
   - delete
 - apiGroups:
+  - infra2.nephio.org
+  resources:
+  - networks
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - create
+  - delete
+- apiGroups:
+  - infra2.nephio.org
+  resources:
+  - networks/status
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - create
+  - delete
+- apiGroups:
+  - infra2.nephio.org
+  resources:
+  - networkconfigs
+  - networkconfigs/status
+  - networks
+  - networks/status
+  verbs:
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - create
+  - delete
+- apiGroups:
   - config.nephio.org
   resources:
   - networks
@@ -132,12 +171,12 @@ rules:
 - apiGroups:
   - infra.nephio.org
   resources:
-  - networks
-  - networks/status
   - repositories
   - repositories/status
   - tokens
   - tokens/status
+  - workloadclusters
+  - workloadclusters/status
   verbs:
   - get
   - list

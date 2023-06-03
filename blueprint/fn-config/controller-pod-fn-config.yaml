@@ -50,6 +50,12 @@ spec:
       - apiGroups: [config.nephio.org]
         resources: [networks/status]
         verbs: [get, list, watch, update, patch, create, delete]
+      - apiGroups: [infra2.nephio.org]
+        resources: [networks]
+        verbs: [get, list, watch, update, patch, create, delete]
+      - apiGroups: [infra2.nephio.org]
+        resources: [networks/status]
+        verbs: [get, list, watch, update, patch, create, delete]
     repository:
       scope: cluster
       permissions:
@@ -185,10 +191,10 @@ spec:
         #  value: git-user-secret
         - name: GIT_URL
           value: http://172.18.0.200:3000
-        #- name: ENABLE_REPOSITORIES
-        #  value: "true"
-        #- name: ENABLE_TOKENS
-        #  value: "true"
+        - name: ENABLE_REPOSITORIES
+          value: "true"
+        - name: ENABLE_TOKENS
+          value: "true"
         - name: ENABLE_BOOTSTRAPSECRETS
           value: "true"
         - name: ENABLE_BOOTSTRAPPACKAGES

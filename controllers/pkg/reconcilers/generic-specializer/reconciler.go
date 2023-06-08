@@ -14,47 +14,42 @@
  limitations under the License.
 */
 
-package ipamspecializer
+package genericspecializer
 
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"strings"
 
-	porchcondition "github.com/nephio-project/nephio/controllers/pkg/porch/condition"
-	//ctrlconfig "github.com/nephio-project/nephio/controllers/pkg/reconcilers/config"
-	ctrlconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
-	infrav1alpha1 "github.com/nephio-project/api/infra/v1alpha1"
-	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
-	"github.com/nephio-project/nephio/krm-functions/lib/kubeobject"
-
-	"reflect"
-
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"sigs.k8s.io/controller-runtime/pkg/event"
-
 	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
+	kptv1 "github.com/GoogleContainerTools/kpt/pkg/api/kptfile/v1"
 	porchv1alpha1 "github.com/GoogleContainerTools/kpt/porch/api/porch/v1alpha1"
 	"github.com/go-logr/logr"
+	ctrlconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
+	ipamfn "github.com/henderiw-nephio/nephio-controllers/pkg/krm-functions/ipam-fn/fn"
+	vlanfn "github.com/henderiw-nephio/nephio-controllers/pkg/krm-functions/vlan-fn/fn"
+	infrav1alpha1 "github.com/nephio-project/api/infra/v1alpha1"
+	porchcondition "github.com/nephio-project/nephio/controllers/pkg/porch/condition"
+	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
 	"github.com/nephio-project/nephio/controllers/pkg/resource"
-
-	//function "github.com/nephio-project/nephio/krm-functions/ipam-fn/fn"
-	function "github.com/henderiw-nephio/nephio-controllers/pkg/krm-functions/ipam-fn/fn"
-	//kptfilelibv1 "github.com/nephio-project/nephio/krm-functions/lib/kptfile/v1"
-	kptv1 "github.com/GoogleContainerTools/kpt/pkg/api/kptfile/v1"
-	kptfilelibv1 "github.com/henderiw-nephio/nephio-controllers/pkg/krm-functions/lib/kptfile/v1"
+	kptfilelibv1 "github.com/nephio-project/nephio/krm-functions/lib/kptfile/v1"
 	"github.com/nephio-project/nephio/krm-functions/lib/kptrl"
+	"github.com/nephio-project/nephio/krm-functions/lib/kubeobject"
 	ipamv1alpha1 "github.com/nokia/k8s-ipam/apis/resource/ipam/v1alpha1"
+	vlanv1alpha1 "github.com/nokia/k8s-ipam/apis/resource/vlan/v1alpha1"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/kustomize/kyaml/kio/kioutil"
 )
 
 func init() {
-	reconcilerinterface.Register("ipamspecializer", &reconciler{})
+	reconcilerinterface.Register("genericspecializer", &reconciler{})
 }
 
 // +kubebuilder:rbac:groups=porch.kpt.dev,resources=packagerevisions,verbs=get;list;watch;create;update;patch;delete
@@ -70,19 +65,26 @@ func (r *reconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, c i
 		return nil, err
 	}
 
-	f := &function.FnR{ClientProxy: cfg.IpamClientProxy}
-
 	r.Client = mgr.GetClient()
-	r.For = corev1.ObjectReference{
+	r.porchClient = cfg.PorchClient
+
+	ipamf := &ipamfn.FnR{ClientProxy: cfg.IpamClientProxy}
+	r.ipamFor = corev1.ObjectReference{
 		APIVersion: ipamv1alpha1.SchemeBuilder.GroupVersion.Identifier(),
 		Kind:       ipamv1alpha1.IPClaimKind,
 	}
-	r.porchClient = cfg.PorchClient
-	r.krmfn = fn.ResourceListProcessorFunc(f.Run)
+	r.ipamkrmfn = fn.ResourceListProcessorFunc(ipamf.Run)
+
+	vlanf := &vlanfn.FnR{ClientProxy: cfg.VlanClientProxy}
+	r.vlanFor = corev1.ObjectReference{
+		APIVersion: vlanv1alpha1.SchemeBuilder.GroupVersion.Identifier(),
+		Kind:       vlanv1alpha1.VLANClaimKind,
+	}
+	r.vlankrmfn = fn.ResourceListProcessorFunc(vlanf.Run)
 
 	// TBD how does the proxy cache work with the injector for updates
 	return nil, ctrl.NewControllerManagedBy(mgr).
-		Named("IpamSpecializer").
+		Named("GenericSpecializer").
 		For(&porchv1alpha1.PackageRevision{}).
 		Complete(r)
 }
@@ -90,16 +92,18 @@ func (r *reconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, c i
 // reconciler reconciles a NetworkInstance object
 type reconciler struct {
 	client.Client
-	For         corev1.ObjectReference
+	ipamFor     corev1.ObjectReference
+	ipamkrmfn   fn.ResourceListProcessor
+	vlanFor     corev1.ObjectReference
+	vlankrmfn   fn.ResourceListProcessor
 	porchClient client.Client
-	krmfn       fn.ResourceListProcessor
 
 	l logr.Logger
 }
 
 func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	r.l = log.FromContext(ctx).WithValues("req", req)
-	//r.l.Info("reconcile IpamSpecializer")
+	//r.l.Info("reconcile specializer")
 
 	pr := &porchv1alpha1.PackageRevision{}
 	if err := r.Get(ctx, req.NamespacedName, pr); err != nil {
@@ -113,14 +117,8 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	}
 	// we just check for forResource conditions and we dont care if it is satisfied already
 	// this allows us to refresh the allocation.
-	ct := kptfilelibv1.GetConditionType(&r.For)
-	if pr.Spec.PackageName == "upf-edge" {
-		r.l.Info("ipam specializer condition", "type", ct, "match", porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, ct), "conditions", len(pr.Status.Conditions))
-		for _, c := range pr.Status.Conditions {
-			r.l.Info("ipam specializer condition", "condition", c)
-		}
-	}
-	if porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, ct) {
+	if porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, kptfilelibv1.GetConditionType(&r.ipamFor)) ||
+		porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, kptfilelibv1.GetConditionType(&r.vlanFor)) {
 		// get package revision resourceList
 		prr := &porchv1alpha1.PackageRevisionResources{}
 		if err := r.porchClient.Get(ctx, req.NamespacedName, prr); err != nil {
@@ -134,34 +132,33 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			return ctrl.Result{}, errors.Wrap(err, "cannot get resourceList")
 		}
 
-		// run the function SDK
-		_, err = r.krmfn.Process(rl)
-		if err != nil {
-			r.l.Error(err, "function run failed")
-			// TBD if we need to return here + check if kptfile is set
-			//return ctrl.Result{}, errors.Wrap(err, "function run failed")
-		}
-		r.l.Info("ipam specializer fn run successfull")
-		clusterName := ""
-		for _, o := range rl.Items {
-			if o.GetAPIVersion() == infrav1alpha1.GroupVersion.Identifier() && o.GetKind() == reflect.TypeOf(infrav1alpha1.WorkloadCluster{}).Name() {
-				cluster, err := kubeobject.NewFromKubeObject[infrav1alpha1.WorkloadCluster](o)
-				if err != nil {
-					r.l.Error(err, "cannot get extended kubeobject")
-					continue
-				}
-				workloadCluster, err := cluster.GetGoStruct()
-				if err != nil {
-					r.l.Error(err, "cannot get gostruct from kubeobject")
-					continue
-				}
-				clusterName = workloadCluster.Spec.ClusterName
+		if porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, kptfilelibv1.GetConditionType(&r.ipamFor)) {
+			// run the function SDK
+			_, err = r.ipamkrmfn.Process(rl)
+			if err != nil {
+				r.l.Error(err, "function run failed")
+				// TBD if we need to return here + check if kptfile is set
+				//return ctrl.Result{}, errors.Wrap(err, "function run failed")
 			}
+			r.l.Info("ipam specializer fn run successfull")
 		}
+		if porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, kptfilelibv1.GetConditionType(&r.vlanFor)) {
+			// run the function SDK
+			_, err = r.vlankrmfn.Process(rl)
+			if err != nil {
+				r.l.Error(err, "function run failed")
+				// TBD if we need to return here + check if kptfile is set
+				//return ctrl.Result{}, errors.Wrap(err, "function run failed")
+			}
+			r.l.Info("vlan specializer fn run successfull")
+		}
+		workloadClusterObjs := rl.Items.Where(fn.IsGroupVersionKind(infrav1alpha1.WorkloadClusterGroupVersionKind))
+		clusterName := r.getClusterName(workloadClusterObjs)
+
 		for _, o := range rl.Items {
 			// TBD what if we create new resources
 			// update only the resource we act upon
-			if o.GetAPIVersion() == r.For.APIVersion && o.GetKind() == r.For.Kind {
+			if o.GetAPIVersion() == r.ipamFor.APIVersion && o.GetKind() == r.ipamFor.Kind {
 				prr.Spec.Resources[o.GetAnnotation(kioutil.PathAnnotation)] = o.String()
 				// Debug
 				alloc, err := kubeobject.NewFromKubeObject[ipamv1alpha1.IPClaim](o)
@@ -174,8 +171,22 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 					r.l.Error(err, "cannot get gostruct from kubeobject")
 					continue
 				}
-				r.l.Info("ipam specializer allocation", "cluserName", clusterName, "status", ipAlloc.Status)
-
+				r.l.Info("generic specializer ip allocation", "cluserName", clusterName, "status", ipAlloc.Status)
+			}
+			if o.GetAPIVersion() == r.vlanFor.APIVersion && o.GetKind() == r.vlanFor.Kind {
+				prr.Spec.Resources[o.GetAnnotation(kioutil.PathAnnotation)] = o.String()
+				// Debug
+				alloc, err := kubeobject.NewFromKubeObject[vlanv1alpha1.VLANClaim](o)
+				if err != nil {
+					r.l.Error(err, "cannot get extended kubeobject")
+					continue
+				}
+				vlanAlloc, err := alloc.GetGoStruct()
+				if err != nil {
+					r.l.Error(err, "cannot get gostruct from kubeobject")
+					continue
+				}
+				r.l.Info("generic specializer vlan allocation", "cluserName", clusterName, "status", vlanAlloc.Status)
 			}
 			if o.GetAPIVersion() == "kpt.dev/v1" && o.GetKind() == "Kptfile" {
 				prr.Spec.Resources[o.GetAnnotation(kioutil.PathAnnotation)] = o.String()
@@ -190,12 +201,14 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 					continue
 				}
 				for _, c := range kptfile.Status.Conditions {
-					if strings.HasPrefix(c.Type, kptfilelibv1.GetConditionType(&r.For)+".") {
-						r.l.Info("ipam specializer conditions", "cluserName", clusterName, "status", c.Status, "condition", c.Type)
+					if strings.HasPrefix(c.Type, kptfilelibv1.GetConditionType(&r.vlanFor)+".") ||
+						strings.HasPrefix(c.Type, kptfilelibv1.GetConditionType(&r.ipamFor)+".") {
+						r.l.Info("generic specializer conditions", "cluserName", clusterName, "status", c.Status, "condition", c.Type)
 					}
 				}
 			}
 		}
+
 		kptfile := rl.Items.GetRootKptfile()
 		if kptfile == nil {
 			r.l.Error(fmt.Errorf("mandatory Kptfile is missing from the package"), "")
@@ -213,4 +226,22 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		}
 	}
 	return ctrl.Result{}, nil
+}
+
+func (r *reconciler) getClusterName(workloadClusterObjs fn.KubeObjects) string {
+	clusterName := ""
+	if len(workloadClusterObjs) > 0 {
+		cluster, err := kubeobject.NewFromKubeObject[infrav1alpha1.WorkloadCluster](workloadClusterObjs[0])
+		if err != nil {
+			r.l.Error(err, "cannot get extended kubeobject")
+			return clusterName
+		}
+		workloadCluster, err := cluster.GetGoStruct()
+		if err != nil {
+			r.l.Error(err, "cannot get gostruct from kubeobject")
+			return clusterName
+		}
+		clusterName = workloadCluster.Spec.ClusterName
+	}
+	return clusterName
 }

@@ -23,13 +23,13 @@ import (
 	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
 	"github.com/nephio-project/nephio/krm-functions/lib/condkptsdk"
 	"github.com/nephio-project/nephio/krm-functions/lib/kubeobject"
-	vlanv1alpha1 "github.com/nokia/k8s-ipam/apis/alloc/vlan/v1alpha1"
+	vlanv1alpha1 "github.com/nokia/k8s-ipam/apis/resource/vlan/v1alpha1"
 	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy"
 	corev1 "k8s.io/api/core/v1"
 )
 
 type FnR struct {
-	ClientProxy clientproxy.Proxy[*vlanv1alpha1.VLANDatabase, *vlanv1alpha1.VLANAllocation]
+	ClientProxy clientproxy.Proxy[*vlanv1alpha1.VLANIndex, *vlanv1alpha1.VLANClaim]
 }
 
 func (f *FnR) Run(rl *fn.ResourceList) (bool, error) {
@@ -38,7 +38,7 @@ func (f *FnR) Run(rl *fn.ResourceList) (bool, error) {
 		&condkptsdk.Config{
 			For: corev1.ObjectReference{
 				APIVersion: vlanv1alpha1.GroupVersion.Identifier(),
-				Kind:       vlanv1alpha1.VLANAllocationKind,
+				Kind:       vlanv1alpha1.VLANClaimKind,
 			},
 			PopulateOwnResourcesFn: nil,
 			UpdateResourceFn:       f.updateVLANAllocationResource,
@@ -58,7 +58,7 @@ func (f *FnR) updateVLANAllocationResource(forObj *fn.KubeObject, objs fn.KubeOb
 		return nil, fmt.Errorf("expected a for object but got nil")
 	}
 	fn.Logf("vlanalloc: %v\n", forObj)
-	allocKOE, err := kubeobject.NewFromKubeObject[vlanv1alpha1.VLANAllocation](forObj)
+	allocKOE, err := kubeobject.NewFromKubeObject[vlanv1alpha1.VLANClaim](forObj)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (f *FnR) updateVLANAllocationResource(forObj *fn.KubeObject, objs fn.KubeOb
 	//newalloc.Name = alloc.GetAnnotations()[condkptsdk.SpecializervlanAllocName]
 	newalloc.Name = alloc.GetAnnotations()["specializer.nephio.org/vlanAllocName"]
 	fn.Logf("vlanALloc newName: %s\n", newalloc.Name)
-	resp, err := f.ClientProxy.Allocate(context.Background(), newalloc, nil)
+	resp, err := f.ClientProxy.Claim(context.Background(), newalloc, nil)
 	if err != nil {
 		return nil, err
 	}

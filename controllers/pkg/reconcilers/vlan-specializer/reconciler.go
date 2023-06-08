@@ -45,7 +45,7 @@ import (
 
 	//function "github.com/nephio-project/nephio/krm-functions/vlan-fn/fn"
 	function "github.com/henderiw-nephio/nephio-controllers/pkg/krm-functions/vlan-fn/fn"
-	vlanv1alpha1 "github.com/nokia/k8s-ipam/apis/alloc/vlan/v1alpha1"
+	vlanv1alpha1 "github.com/nokia/k8s-ipam/apis/resource/vlan/v1alpha1"
 	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -75,7 +75,7 @@ func (r *reconciler) SetupWithManager(ctx context.Context, mgr ctrl.Manager, c i
 
 	r.For = corev1.ObjectReference{
 		APIVersion: vlanv1alpha1.SchemeBuilder.GroupVersion.Identifier(),
-		Kind:       vlanv1alpha1.VLANAllocationKind,
+		Kind:       vlanv1alpha1.VLANClaimKind,
 	}
 	r.Client = mgr.GetClient()
 	r.porchClient = cfg.PorchClient
@@ -160,7 +160,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 			if o.GetAPIVersion() == r.For.APIVersion && o.GetKind() == r.For.Kind {
 				prr.Spec.Resources[o.GetAnnotation(kioutil.PathAnnotation)] = o.String()
 				// Debug
-				alloc, err := kubeobject.NewFromKubeObject[vlanv1alpha1.VLANAllocation](o)
+				alloc, err := kubeobject.NewFromKubeObject[vlanv1alpha1.VLANClaim](o)
 				if err != nil {
 					r.l.Error(err, "cannot get extended kubeobject")
 					continue

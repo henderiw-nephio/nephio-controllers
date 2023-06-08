@@ -24,13 +24,13 @@ import (
 	"github.com/GoogleContainerTools/kpt-functions-sdk/go/fn"
 	"github.com/nephio-project/nephio/krm-functions/lib/condkptsdk"
 	"github.com/nephio-project/nephio/krm-functions/lib/kubeobject"
-	ipamv1alpha1 "github.com/nokia/k8s-ipam/apis/alloc/ipam/v1alpha1"
+	ipamv1alpha1 "github.com/nokia/k8s-ipam/apis/resource/ipam/v1alpha1"
 	"github.com/nokia/k8s-ipam/pkg/proxy/clientproxy"
 	corev1 "k8s.io/api/core/v1"
 )
 
 type FnR struct {
-	ClientProxy clientproxy.Proxy[*ipamv1alpha1.NetworkInstance, *ipamv1alpha1.IPAllocation]
+	ClientProxy clientproxy.Proxy[*ipamv1alpha1.NetworkInstance, *ipamv1alpha1.IPClaim]
 }
 
 func (f *FnR) Run(rl *fn.ResourceList) (bool, error) {
@@ -39,7 +39,7 @@ func (f *FnR) Run(rl *fn.ResourceList) (bool, error) {
 		&condkptsdk.Config{
 			For: corev1.ObjectReference{
 				APIVersion: ipamv1alpha1.GroupVersion.Identifier(),
-				Kind:       ipamv1alpha1.IPAllocationKind,
+				Kind:       ipamv1alpha1.IPClaimKind,
 			},
 			PopulateOwnResourcesFn: nil,
 			UpdateResourceFn:       f.updateIPAllocationResource,
@@ -59,7 +59,7 @@ func (f *FnR) updateIPAllocationResource(forObj *fn.KubeObject, objs fn.KubeObje
 		return nil, fmt.Errorf("expected a for object but got nil")
 	}
 	fn.Logf("ipalloc: %v\n", forObj)
-	allocKOE, err := kubeobject.NewFromKubeObject[ipamv1alpha1.IPAllocation](forObj)
+	allocKOE, err := kubeobject.NewFromKubeObject[ipamv1alpha1.IPClaim](forObj)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (f *FnR) updateIPAllocationResource(forObj *fn.KubeObject, objs fn.KubeObje
 	newalloc := alloc.DeepCopy()
 	newalloc.Name = getNewName(alloc.GetAnnotations(), alloc.GetName())
 	fn.Logf("ipalloc newName: %s\n", newalloc.Name)
-	resp, err := f.ClientProxy.Allocate(context.Background(), newalloc, nil)
+	resp, err := f.ClientProxy.Claim(context.Background(), newalloc, nil)
 	if err != nil {
 		return nil, err
 	}

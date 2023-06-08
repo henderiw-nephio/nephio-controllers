@@ -215,6 +215,8 @@ spec:
         - name: ENABLE_NETWORKCONFIGS
           value: "true"
         - name: ENABLE_VLANSPECIALIZER
-          value: "true"
+          value: "false"
         - name: ENABLE_IPAMSPECIALIZER
+          value: "false"
+        - name: ENABLE_GENERICSPECIALIZER
           value: "true"

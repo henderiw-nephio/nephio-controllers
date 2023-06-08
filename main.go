@@ -9,12 +9,16 @@ import (
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-packages"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/bootstrap-secret"
 	ctrlrconfig "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/config"
+	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/ipam-specializer"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/repository"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
+	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/vlan-specializer"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
 	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/network"
 	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/networkconfig"
 	_ "github.com/henderiw-nephio/network/controllers/pkg/reconcilers/target"
+	//_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/ipam-specializer"
+	//_ "github.com/nephio-project/nephio/controllers/pkg/reconcilers/vlan-specializer"
 	"github.com/henderiw-nephio/network/pkg/targets"
 	porchclient "github.com/nephio-project/nephio/controllers/pkg/porch/client"
 	reconcilerinterface "github.com/nephio-project/nephio/controllers/pkg/reconcilers/reconciler-interface"
@@ -88,6 +92,7 @@ func main() {
 
 	backendAddress := fmt.Sprintf("%s.%s.svc.cluster.local:%s", "resource-backend-controller-grpc-svc", "backend-system", "9999")
 	ctrlCfg := &ctrlrconfig.ControllerConfig{
+		Address:     backendAddress,
 		GiteaClient: gc,
 		PorchClient: porchClient,
 		IpamClientProxy: ipam.New(ctx, clientproxy.Config{

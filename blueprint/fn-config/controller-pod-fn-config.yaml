@@ -101,6 +101,15 @@ spec:
       - apiGroups: [porch.kpt.dev]
         resources: [packagerevisionresources/status, packagerevisions/status, packagerevisions/approval]
         verbs: [get]
+    porch:
+      scope: cluster
+      permissions:
+      - apiGroups: [porch.kpt.dev]
+        resources: [packagerevisionresources, packagerevisions]
+        verbs: [get, list, watch, update, patch, create, delete]
+      - apiGroups: [porch.kpt.dev]
+        resources: [packagerevisionresources/status, packagerevisions/status, packagerevisions/approval]
+        verbs: [get, list, watch, update, patch, create, delete]
     leader-election:
       permissions:
       - apiGroups: [""]
@@ -185,12 +194,12 @@ spec:
             fieldRef:
               apiVersion: v1
               fieldPath: status.hostIP
-        #- name: GIT_NAMESPACE
-        #  value: gitea
         #- name: GIT_SECRET_NAME
         #  value: git-user-secret
         - name: GIT_URL
           value: http://172.18.0.200:3000
+        - name: GIT_NAMESPACE
+          value: gitea
         - name: ENABLE_REPOSITORIES
           value: "true"
         - name: ENABLE_TOKENS
@@ -204,4 +213,8 @@ spec:
         - name: ENABLE_TARGETS
           value: "true"
         - name: ENABLE_NETWORKCONFIGS
+          value: "true"
+        - name: ENABLE_VLANSPECIALIZER
+          value: "true"
+        - name: ENABLE_IPAMSPECIALIZER
           value: "true"

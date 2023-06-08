@@ -1,8 +1,8 @@
 apiVersion: kpt.dev/v1alpha1
 kind: ResourceGroup
 metadata:
-  name: inventory-89983078
+  name: inventory-82887218
   namespace: nephio-system
   labels:
-    cli-utils.sigs.k8s.io/inventory-id: 5b94d1037bd5a19acf1d3b99886689751b182430-1684938025170227000
+    cli-utils.sigs.k8s.io/inventory-id: 5bfd2560b108f6a1ee0f58c9c635f0d10c87176e-1685815300890765000
   annotations: {}

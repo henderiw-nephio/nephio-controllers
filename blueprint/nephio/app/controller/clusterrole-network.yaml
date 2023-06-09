@@ -41,10 +41,9 @@ rules:
   - create
   - delete
 - apiGroups:
-  - ipam.alloc.nephio.org
+  - ipam.resource.nephio.org
   resources:
   - networkinstances
-  - ipprefixes
   verbs:
   - get
   - list
@@ -54,10 +53,9 @@ rules:
   - create
   - delete
 - apiGroups:
-  - ipam.alloc.nephio.org
+  - ipam.resource.nephio.org
   resources:
   - networkinstances/status
-  - ipprefixes/status
   verbs:
   - get
   - list
@@ -67,10 +65,9 @@ rules:
   - create
   - delete
 - apiGroups:
-  - vlan.alloc.nephio.org
+  - vlan.resource.nephio.org
   resources:
-  - vlandatabases
-  - vlans
+  - vlanindices
   verbs:
   - get
   - list
@@ -80,10 +77,9 @@ rules:
   - create
   - delete
 - apiGroups:
-  - vlan.alloc.nephio.org
+  - vlan.resource.nephio.org
   resources:
-  - vlandatabases/status
-  - vlans/status
+  - vlanindices/status
   verbs:
   - get
   - list
@@ -117,7 +113,7 @@ rules:
   - create
   - delete
 - apiGroups:
-  - infra2.nephio.org
+  - infra.nephio.org
   resources:
   - networks
   verbs:
@@ -129,23 +125,8 @@ rules:
   - create
   - delete
 - apiGroups:
-  - infra2.nephio.org
+  - infra.nephio.org
   resources:
-  - networks/status
-  verbs:
-  - get
-  - list
-  - watch
-  - update
-  - patch
-  - create
-  - delete
-- apiGroups:
-  - infra2.nephio.org
-  resources:
-  - networkconfigs
-  - networkconfigs/status
-  - networks
   - networks/status
   verbs:
   - get
@@ -171,6 +152,8 @@ rules:
 - apiGroups:
   - infra.nephio.org
   resources:
+  - networks
+  - networks/status
   - repositories
   - repositories/status
   - tokens

@@ -87,10 +87,6 @@ spec:
           value: "true"
         - name: ENABLE_NETWORKCONFIGS
           value: "true"
-        - name: ENABLE_VLANSPECIALIZER
-          value: "false"
-        - name: ENABLE_IPAMSPECIALIZER
-          value: "false"
         - name: ENABLE_GENERICSPECIALIZER
           value: "true"
         image: europe-docker.pkg.dev/srlinux/eu.gcr.io/nephio-operator:latest

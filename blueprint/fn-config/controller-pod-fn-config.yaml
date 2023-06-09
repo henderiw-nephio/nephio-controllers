@@ -32,17 +32,17 @@ spec:
       - apiGroups: [infra.nephio.org]
         resources: [links/status, nodes/status, endpoints/status]
         verbs: [get, list, watch, update, patch, create, delete]
-      - apiGroups: [ipam.alloc.nephio.org]
-        resources: [networkinstances, ipprefixes]
+      - apiGroups: [ipam.resource.nephio.org]
+        resources: [networkinstances]
         verbs: [get, list, watch, update, patch, create, delete]
-      - apiGroups: [ipam.alloc.nephio.org]
-        resources: [networkinstances/status, ipprefixes/status]
+      - apiGroups: [ipam.resource.nephio.org]
+        resources: [networkinstances/status]
         verbs: [get, list, watch, update, patch, create, delete]
-      - apiGroups: [vlan.alloc.nephio.org]
-        resources: [vlandatabases, vlans]
+      - apiGroups: [vlan.resource.nephio.org]
+        resources: [vlanindices]
         verbs: [get, list, watch, update, patch, create, delete]
-      - apiGroups: [vlan.alloc.nephio.org]
-        resources: [vlandatabases/status, vlans/status]
+      - apiGroups: [vlan.resource.nephio.org]
+        resources: [vlanindices/status]
         verbs: [get, list, watch, update, patch, create, delete]
       - apiGroups: [config.nephio.org]
         resources: [networks]
@@ -50,10 +50,10 @@ spec:
       - apiGroups: [config.nephio.org]
         resources: [networks/status]
         verbs: [get, list, watch, update, patch, create, delete]
-      - apiGroups: [infra2.nephio.org]
+      - apiGroups: [infra.nephio.org]
         resources: [networks]
         verbs: [get, list, watch, update, patch, create, delete]
-      - apiGroups: [infra2.nephio.org]
+      - apiGroups: [infra.nephio.org]
         resources: [networks/status]
         verbs: [get, list, watch, update, patch, create, delete]
     repository:
@@ -214,9 +214,9 @@ spec:
           value: "true"
         - name: ENABLE_NETWORKCONFIGS
           value: "true"
-        - name: ENABLE_VLANSPECIALIZER
-          value: "false"
-        - name: ENABLE_IPAMSPECIALIZER
-          value: "false"
+        #- name: ENABLE_VLANSPECIALIZER
+        #  value: "false"
+        #- name: ENABLE_IPAMSPECIALIZER
+        #  value: "false"
         - name: ENABLE_GENERICSPECIALIZER
           value: "true"

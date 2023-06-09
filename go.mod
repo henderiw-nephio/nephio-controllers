@@ -9,8 +9,8 @@ require (
 	github.com/GoogleContainerTools/kpt/porch/api v0.0.0-20230504200302-14c7b353e6b6
 	github.com/go-logr/logr v1.2.4
 	github.com/google/go-cmp v0.5.9
-	github.com/henderiw-nephio/network v0.0.0-20230607151027-34a5c6a00445
-	github.com/nephio-project/api v0.0.0-20230608190129-69a082eebe55
+	github.com/henderiw-nephio/network v0.0.0-20230609064343-f130c1a2bd03
+	github.com/nephio-project/api v0.0.0-20230609040430-35c43c1114e5
 	github.com/nephio-project/nephio/controllers/pkg v0.0.0-20230531154408-a4237c40cb76
 	github.com/nephio-project/nephio/krm-functions/lib v0.0.0-20230606131713-986a9435700d
 	github.com/nokia/k8s-ipam v0.0.4-0.20230608184434-0c910788bac7
@@ -149,7 +149,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/monochromegane/go-gitignore v0.0.0-20200626010858-205db1a8cc00 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/nephio-project/nephio-controller-poc v0.0.0-20221111013453-5a31b4722094 // indirect
 	github.com/oklog/run v1.1.0 // indirect
 	github.com/openconfig/gnmi v0.9.1 // indirect
 	github.com/openconfig/gnmic v0.31.0 // indirect
@@ -182,10 +181,8 @@ require (
 	go4.org/unsafe/assume-no-moving-gc v0.0.0-20230525183740-e7c30c78aeb2 // indirect
 	gocloud.dev v0.25.1-0.20220408200107-09b10f7359f7 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
-	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
-	golang.org/x/sync v0.2.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/term v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect

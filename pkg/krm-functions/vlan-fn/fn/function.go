@@ -41,7 +41,7 @@ func (f *FnR) Run(rl *fn.ResourceList) (bool, error) {
 				Kind:       vlanv1alpha1.VLANClaimKind,
 			},
 			PopulateOwnResourcesFn: nil,
-			UpdateResourceFn:       f.updateVLANAllocationResource,
+			UpdateResourceFn:       f.updateVLANClaimResource,
 		},
 	)
 	if err != nil {
@@ -51,35 +51,34 @@ func (f *FnR) Run(rl *fn.ResourceList) (bool, error) {
 	return sdk.Run()
 }
 
-// updateIPAllocationResource provides a VLAN allocation for a given VLANAllocation KRM resource
+// updateVLANClaimResource claims a VLAN for a given VLANClaim KRM resource
 // in the package by calling the vlan backend
-func (f *FnR) updateVLANAllocationResource(forObj *fn.KubeObject, objs fn.KubeObjects) (*fn.KubeObject, error) {
+func (f *FnR) updateVLANClaimResource(forObj *fn.KubeObject, objs fn.KubeObjects) (*fn.KubeObject, error) {
 	if forObj == nil {
 		return nil, fmt.Errorf("expected a for object but got nil")
 	}
-	fn.Logf("vlanalloc: %v\n", forObj)
-	allocKOE, err := kubeobject.NewFromKubeObject[vlanv1alpha1.VLANClaim](forObj)
+	fn.Logf("vlanclaim: %v\n", forObj)
+	claimKOE, err := kubeobject.NewFromKubeObject[vlanv1alpha1.VLANClaim](forObj)
 	if err != nil {
 		return nil, err
 	}
-	alloc, err := allocKOE.GetGoStruct()
+	claim, err := claimKOE.GetGoStruct()
 	if err != nil {
 		return nil, err
 	}
-	newalloc := alloc.DeepCopy()
-	//newalloc.Name = alloc.GetAnnotations()[condkptsdk.SpecializervlanAllocName]
-	newalloc.Name = alloc.GetAnnotations()["specializer.nephio.org/vlanAllocName"]
-	fn.Logf("vlanALloc newName: %s\n", newalloc.Name)
-	resp, err := f.ClientProxy.Claim(context.Background(), newalloc, nil)
+	newclaim := claim.DeepCopy()
+	newclaim.Name = claim.GetAnnotations()["specializer.nephio.org/vlanClaimName"]
+	fn.Logf("vlanclaim newName: %s\n", newclaim.Name)
+	resp, err := f.ClientProxy.Claim(context.Background(), newclaim, nil)
 	if err != nil {
 		return nil, err
 	}
-	alloc.Status = resp.Status
+	claim.Status = resp.Status
 
-	if alloc.Status.VLANID != nil {
-		fn.Logf("alloc resp vlan: %v\n", *resp.Status.VLANID)
+	if claim.Status.VLANID != nil {
+		fn.Logf("claim resp vlan: %v\n", *resp.Status.VLANID)
 	}
 	// set the status
-	err = allocKOE.SetStatus(resp)
-	return &allocKOE.KubeObject, err
+	err = claimKOE.SetStatus(resp)
+	return &claimKOE.KubeObject, err
 }

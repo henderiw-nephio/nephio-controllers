@@ -156,7 +156,9 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		workloadClusterObjs := rl.Items.Where(fn.IsGroupVersionKind(infrav1alpha1.WorkloadClusterGroupVersionKind))
 		clusterName := r.getClusterName(workloadClusterObjs)
 
-		// If it is published, ignore it
+		// We want to process the functions to refresh the claims
+		// but if the package is in publish state the updates cannot be done
+		// so we stop here
 		if porchv1alpha1.LifecycleIsPublished(pr.Spec.Lifecycle) {
 			r.l.Info("package is published, no updates possible",
 				"repo", pr.Spec.RepositoryName,

@@ -119,6 +119,7 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 	// this allows us to refresh the allocation.
 	if porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, kptfilelibv1.GetConditionType(&r.ipamFor)) ||
 		porchcondition.HasSpecificTypeConditions(pr.Status.Conditions, kptfilelibv1.GetConditionType(&r.vlanFor)) {
+
 		// get package revision resourceList
 		prr := &porchv1alpha1.PackageRevisionResources{}
 		if err := r.porchClient.Get(ctx, req.NamespacedName, prr); err != nil {
@@ -154,6 +155,17 @@ func (r *reconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Resu
 		}
 		workloadClusterObjs := rl.Items.Where(fn.IsGroupVersionKind(infrav1alpha1.WorkloadClusterGroupVersionKind))
 		clusterName := r.getClusterName(workloadClusterObjs)
+
+		// If it is published, ignore it
+		if porchv1alpha1.LifecycleIsPublished(pr.Spec.Lifecycle) {
+			r.l.Info("package is published, no updates possible",
+				"repo", pr.Spec.RepositoryName,
+				"package", pr.Spec.PackageName,
+				"rev", pr.Spec.Revision,
+				"clusterName", clusterName,
+			)
+			return ctrl.Result{}, nil
+		}
 
 		for _, o := range rl.Items {
 			// TBD what if we create new resources

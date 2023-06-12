@@ -16,7 +16,6 @@
 
 package approval
 
-/*
 import (
 	"context"
 	"fmt"
@@ -273,4 +272,3 @@ func (r *reconciler) policyInitial(ctx context.Context, pr *porchv1alpha1.Packag
 	// we did not find an already published revision of this package, so approve it
 	return true, nil
 }
-*/

@@ -12,6 +12,7 @@ import (
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/generic-specializer"
 	//_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/ipam-specializer"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/repository"
+	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/approval"
 	_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/token"
 	//_ "github.com/henderiw-nephio/nephio-controllers/controllers/pkg/reconcilers/vlan-specializer"
 	"github.com/henderiw-nephio/nephio-controllers/pkg/giteaclient"
